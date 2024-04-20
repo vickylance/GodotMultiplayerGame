@@ -17,4 +17,4 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Server="*res://src/singleton/Server.gd"
+ServerCommunication="*res://src/singleton/ServerCommunication.gd"

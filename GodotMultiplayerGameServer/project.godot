@@ -14,3 +14,8 @@ config/name="GodotMultiplayerGameServer"
 run/main_scene="res://src/main/Server.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+ServerData="*res://src/singleton/ServerData.gd"
+ServerCommunication="*res://src/singleton/ServerCommunication.gd"

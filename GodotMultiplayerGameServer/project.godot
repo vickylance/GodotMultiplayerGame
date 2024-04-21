@@ -19,3 +19,4 @@ config/icon="res://icon.svg"
 
 ServerData="*res://src/singleton/ServerData.gd"
 ServerCommunication="*res://src/singleton/ServerCommunication.gd"
+Combat="*res://src/singleton/Combat.gd"

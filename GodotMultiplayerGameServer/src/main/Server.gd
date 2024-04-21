@@ -10,11 +10,16 @@ func _ready() -> void:
 
 
 func start_server() -> void:
-	network.create_server(port, max_players)
+	var err := network.create_server(port, max_players)
+	assert(err == OK)
 	multiplayer.multiplayer_peer = network
 	print("Server started on port: " + str(port))
-	network.peer_connected.connect(_peer_connected)
-	network.peer_disconnected.connect(_peer_disconnected)
+
+	print("Multiplayer ID: ", multiplayer.get_unique_id())	
+	err = network.peer_connected.connect(_peer_connected)
+	assert(err == OK)
+	err = network.peer_disconnected.connect(_peer_disconnected)
+	assert(err == OK)
 	pass
 
 

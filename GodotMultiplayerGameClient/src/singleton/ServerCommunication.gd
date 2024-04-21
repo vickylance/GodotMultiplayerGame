@@ -10,19 +10,21 @@ func _ready() -> void:
 	connect_to_server()
 
 func connect_to_server() -> void:
-	network.create_client(server_ip, server_port)
+	var err := network.create_client(server_ip, server_port)
+	assert(err == OK)
 	multiplayer.multiplayer_peer = network
 	
-	print(multiplayer.get_unique_id())
-	print(multiplayer.get_instance_id())
-	print(get_instance_id())
+	print("Multiplayer ID: ", multiplayer.get_unique_id())
 
 	# network.peer_connected.connect(_on_peer_connected)
 	# network.peer_disconnected.connect(_on_peer_disconnected)
 
-	multiplayer.connected_to_server.connect(_on_connected_to_server)
-	multiplayer.connection_failed.connect(_on_connection_failed)
-	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	err = multiplayer.connected_to_server.connect(_on_connected_to_server)
+	assert(err == OK)
+	err = multiplayer.connection_failed.connect(_on_connection_failed)
+	assert(err == OK)
+	err = multiplayer.server_disconnected.connect(_on_server_disconnected)
+	assert(err == OK)
 
 func _on_connected_to_server() -> void:
 	print("Connected to server")
@@ -46,8 +48,6 @@ func fetch_skill_damage(skill_name: String, instance_id: int) -> void:
 
 @rpc
 func return_skill_damage(skill_damage, requester) -> void:
-	instance_from_id(requester).set_damage(skill_damage)
-	print("S DMG", skill_damage, " ,", requester)
-
-func set_damage(dmg: int) -> void:
-	print("DMG", dmg)
+	var requester_instance = instance_from_id(requester)
+	if requester_instance.has_method("set_damage"):
+		requester_instance.set_damage(skill_damage)

@@ -10,20 +10,16 @@ config_version=5
 
 [application]
 
-config/name="GodotMultiplayerGameClient"
+config/name="GodotMultiplayerGameGateway"
 run/main_scene="res://src/main/main.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-ServerCommunication="*res://src/singleton/server_communication.gd"
+Authenticate="*res://src/singleton/authenticate.gd"
 Gateway="*res://src/singleton/gateway.gd"
-PlayerStats="*res://src/singleton/player_stats.gd"
 
-[display]
+[editor]
 
-window/size/viewport_width=1920
-window/size/viewport_height=1080
-window/stretch/mode="viewport"
-window/stretch/scale=2.0
+run/main_run_args="--headless"

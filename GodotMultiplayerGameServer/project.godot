@@ -11,12 +11,13 @@ config_version=5
 [application]
 
 config/name="GodotMultiplayerGameServer"
-run/main_scene="res://src/main/Server.tscn"
+run/main_scene="res://src/main/server.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-ServerData="*res://src/singleton/ServerData.gd"
-ServerCommunication="*res://src/singleton/ServerCommunication.gd"
-Combat="*res://src/singleton/Combat.gd"
+ServerData="*res://src/singleton/server_data.gd"
+ServerCommunication="*res://src/singleton/server_communication.gd"
+Combat="*res://src/singleton/combat.gd"
+GameServers="*res://src/singleton/game_servers.gd"

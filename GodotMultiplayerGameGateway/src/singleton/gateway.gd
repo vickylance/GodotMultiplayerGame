@@ -4,7 +4,8 @@ var network := ENetMultiplayerPeer.new()
 var gateway_api := SceneMultiplayer.new()
 var gateway_server_port := 1910
 var max_players := 100
-
+var cert_key := load("res://cert/X509_key.key")
+var cert := load("res://cert/X509_Certificate.crt")
 
 func _ready() -> void:
 	start_server()
@@ -21,6 +22,7 @@ func _process(_delta: float) -> void:
 func start_server() -> void:
 	var err := network.create_server(gateway_server_port, max_players)
 	assert(err == OK)
+	network.host.dtls_server_setup(TLSOptions.server(cert_key, cert))
 	
 	get_tree().set_multiplayer(gateway_api, self.get_path())
 	gateway_api.multiplayer_peer = network

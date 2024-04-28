@@ -4,6 +4,7 @@ var network := ENetMultiplayerPeer.new()
 var gateway_api := SceneMultiplayer.new()
 var gateway_server_ip := "127.0.0.1"
 var gateway_server_port := 1910
+var cert = load("res://cert/X509_Certificate.crt")
 
 signal player_successfully_authenticated
 signal player_authentication_failed
@@ -26,6 +27,8 @@ func connect_to_server(_username: String, _password: String) -> void:
 	network = ENetMultiplayerPeer.new()
 	gateway_api = SceneMultiplayer.new()
 	var err := network.create_client(gateway_server_ip, gateway_server_port)
+	assert(err == OK)
+	err = network.host.dtls_client_setup("GodotMultiplayerGame", TLSOptions.client(cert))
 	assert(err == OK)
 	
 	get_tree().set_multiplayer(gateway_api, self.get_path())

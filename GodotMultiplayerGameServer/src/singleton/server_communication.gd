@@ -1,13 +1,13 @@
 extends Node
 
-
 signal verify_player(player_id: int, token: String)
+
 
 @rpc("any_peer", "reliable")
 func fetch_skill_damage(skill_name: String, requester_id: int) -> void:
 	var player_id := multiplayer.get_remote_sender_id()
 	var damage: int = Combat.fetch_skill_damage(skill_name)
-	rpc_id(player_id, "return_skill_damage", damage, requester_id)
+	return_skill_damage.rpc_id(player_id, damage, requester_id)
 	print("Sending: " + str(damage) + " damage to player " + str(player_id))
 	pass
 
@@ -24,7 +24,7 @@ func fetch_player_stats() -> void:
 	var player_id := multiplayer.get_remote_sender_id()
 	var player_stats = get_node("/root/Server/" + str(player_id)).player_stats # TODO: Refactor better
 	print("Got the player stats: ", player_stats)
-	rpc_id(player_id, "return_player_stats", player_stats)
+	return_player_stats.rpc_id(player_id, player_stats)
 	pass
 
 
@@ -36,7 +36,7 @@ func return_player_stats(_stats) -> void:
 
 @rpc("reliable")
 func fetch_token(player_id: int) -> void:
-	rpc_id(player_id, "fetch_token", player_id)
+	fetch_token.rpc_id(player_id, player_id)
 	pass
 
 
@@ -50,5 +50,5 @@ func return_token(token: String) -> void:
 @rpc("reliable")
 func return_token_verification_results(player_id: int, result: bool) -> void:
 	print("return_token_verification_results: ", player_id, " result: ", result)
-	rpc_id(player_id, "return_token_verification_results", player_id, result)
+	return_token_verification_results.rpc_id(player_id, player_id, result)
 	pass

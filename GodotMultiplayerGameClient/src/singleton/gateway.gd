@@ -58,8 +58,7 @@ func _on_server_disconnected() -> void:
 
 @rpc("reliable")
 func login_request() -> void:
-	#gateway_api.rpc_id(1)
-	rpc_id(1, "login_request", username, password)
+	login_request.rpc_id(1, username, password)
 	username = ""
 	password = ""
 	pass

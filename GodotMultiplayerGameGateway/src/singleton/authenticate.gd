@@ -50,13 +50,13 @@ func _on_server_disconnected() -> void:
 #     print("Peer disconnected: ", id)
 
 
-@rpc
+@rpc("reliable")
 func authenticate_player(username: String, password: String, player_id: int) -> void:
-	rpc_id(1, "authenticate_player", username, password, player_id)
+	authenticate_player.rpc_id(1, username, password, player_id)
 	pass
 
 
-@rpc
+@rpc("reliable")
 func authenticate_result(result: bool, player_id: int, token: String) -> void:
 	print("Got result: ", result, " PlayerID: ", player_id, " TOKEN: ",  token)
 	Gateway.return_login_request(result, player_id, token)

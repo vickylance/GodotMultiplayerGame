@@ -35,7 +35,7 @@ func _peer_disconnected(gateway_id: int) -> void:
 	pass
 
 
-@rpc("any_peer")
+@rpc("any_peer", "reliable")
 func authenticate_player(username: String, password: String, player_id: int) -> void:
 	print("Authentication request received")
 	var token
@@ -64,11 +64,11 @@ func authenticate_player(username: String, password: String, player_id: int) -> 
 		GameServers.distribute_login_tokens(token, game_server)
 		
 	print("authentication result send to gateway server")
-	rpc_id(gateway_id, "authenticate_result", result, player_id, token)
+	authenticate_result.rpc_id(gateway_id, result, player_id, token)
 	pass
 
 
-@rpc
+@rpc("reliable")
 func authenticate_result(_result: bool, _player_id: int, _token: String) -> void:
 	# Only implemented on gateway client
 	pass

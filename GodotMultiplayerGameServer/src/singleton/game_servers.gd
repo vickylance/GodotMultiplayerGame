@@ -53,7 +53,7 @@ func _on_server_disconnected() -> void:
 	print("AuthServer disconnected")
 
 
-@rpc
+@rpc("reliable")
 func receive_login_token(token: String) -> void:
 	print("Received Token: ", token)
 	game_server.expected_tokens.append(token)

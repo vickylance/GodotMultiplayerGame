@@ -51,11 +51,11 @@ func _peer_disconnected(game_server_id: int) -> void:
 func distribute_login_tokens(token: String, game_server: String) -> void:
 	print("Token: ", token, " Gameserver: ", game_server)
 	var game_server_peer_id = game_server_list[game_server]
-	rpc_id(game_server_peer_id, "receive_login_token", token)
+	receive_login_token.rpc_id(game_server_peer_id, token)
 	pass
 
 
-@rpc
+@rpc("reliable")
 func receive_login_token(_token: String) -> void:
 	# Implemented on Game Servers
 	pass

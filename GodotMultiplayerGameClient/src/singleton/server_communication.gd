@@ -61,7 +61,7 @@ func return_skill_damage(skill_damage, requester) -> void:
 
 @rpc("reliable")
 func fetch_player_stats() -> void:
-	rpc_id(1, "fetch_player_stats")
+	fetch_player_stats.rpc_id(1)
 	pass
 
 
@@ -73,7 +73,7 @@ func return_player_stats(stats) -> void:
 
 @rpc("reliable")
 func fetch_token(_player_id: int) -> void:
-	rpc_id(1, "return_token", token)
+	return_token.rpc_id(1, token)
 	pass
 
 

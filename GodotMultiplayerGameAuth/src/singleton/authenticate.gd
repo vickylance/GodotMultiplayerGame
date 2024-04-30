@@ -39,29 +39,31 @@ func _peer_disconnected(gateway_id: int) -> void:
 func authenticate_player(username: String, password: String, player_id: int) -> void:
 	print("Authentication request received for user: ", username)
 	var token := ""
+	var hashed_password
 	var gateway_id = multiplayer.get_remote_sender_id()
 	var result
 	print("Starting authentication")
 	if not PlayerData.player_data.has(username):
 		print("User not recognized")
 		result = false
-	elif not PlayerData.player_data[username].Password == password:
-		print("Incorrect password")
-		result = false
 	else:
-		print("Successful authentication")
-		result = true
-		
-		# Generate token
-		randomize()
-		var random_number = randi()
-		var hashed = str(random_number).sha256_text()
-		print("Hash: ", hashed)
-		var timestamp = str(int(Time.get_unix_time_from_system()))
-		print("Time: ", timestamp)
-		token = hashed + timestamp
-		var game_server = "GameServer1" # TODO: This name should come from LoadBalancer
-		GameServers.distribute_login_tokens(token, game_server)
+		var retrieved_salt = PlayerData.player_data[username].Salt
+		hashed_password = generate_hashed_password(password, retrieved_salt)
+	
+		if not PlayerData.player_data[username].Password == hashed_password:
+			print("Incorrect password")
+			result = false
+		else:
+			print("Successful authentication")
+			result = true
+	
+			# Generate token
+			randomize()
+			var hashed = str(randi()).sha256_text()
+			var timestamp = str(int(Time.get_unix_time_from_system()))
+			token = hashed + timestamp
+			var game_server = "GameServer1" # TODO: This name should come from LoadBalancer
+			GameServers.distribute_login_tokens(token, game_server)
 		
 	print("authentication result send to gateway server")
 	authenticate_result.rpc_id(gateway_id, result, player_id, token)
@@ -86,7 +88,9 @@ func create_account(username: String, password: String, player_id: int) -> void:
 	else:
 		result = true
 		message = 3
-		PlayerData.player_data[username] = { "Password": password }
+		var salt := generate_salt()
+		var hashed_password := generate_hashed_password(password, salt)
+		PlayerData.player_data[username] = { "Password": hashed_password, "Salt": salt }
 		PlayerData.save_player_ids()
 	create_account_result.rpc_id(gateway_id, result, player_id, message)
 	print("Reload IDs")
@@ -99,3 +103,21 @@ func create_account(username: String, password: String, player_id: int) -> void:
 func create_account_result(_result: bool, _player_id: int, _message: int) -> void:
 	# Implemented on Gateway client
 	pass
+
+
+func generate_salt() -> String:
+	randomize()
+	var salt := str(randi()).sha1_text()
+	return salt
+
+
+func generate_hashed_password(password: String, salt: String) -> String:
+	print(str(Time.get_unix_time_from_system()))
+	var hashed_password := password
+	var rounds := pow(2, 18)
+	while rounds > 0:
+		hashed_password = (hashed_password + salt).sha256_text()
+		rounds -= 1
+	print("Final hashed password:", hashed_password)
+	print(str(Time.get_unix_time_from_system()))
+	return hashed_password

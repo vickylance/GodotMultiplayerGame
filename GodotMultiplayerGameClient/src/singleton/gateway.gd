@@ -67,7 +67,7 @@ func _on_server_disconnected() -> void:
 
 @rpc("reliable")
 func login_request() -> void:
-	login_request.rpc_id(1, username, password)
+	login_request.rpc_id(1, username, password.sha256_text())
 	username = ""
 	password = ""
 	pass
@@ -93,7 +93,7 @@ func return_login_request(result: bool, _player_id: int, token: String) -> void:
 @rpc("reliable")
 func create_new_account_request() -> void:
 	print("Requesting new account creation")
-	create_new_account_request.rpc_id(1, username, password)
+	create_new_account_request.rpc_id(1, username, password.sha256_text())
 	username = ""
 	password = ""
 	pass

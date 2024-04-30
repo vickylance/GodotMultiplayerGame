@@ -50,7 +50,7 @@ func _peer_disconnected(player_id: int) -> void:
 @rpc("any_peer", "reliable")
 func login_request(username: String, password: String) -> void:
 	var player_id := gateway_api.get_remote_sender_id()
-	Authenticate.authenticate_player(username, password, player_id)
+	Authenticate.authenticate_player(username.to_lower(), password, player_id)
 	pass
 
 
@@ -59,5 +59,29 @@ func return_login_request(result: bool, player_id: int, token: String) -> void:
 	print("ReturnLoginRequest: ", result, " playerID: ", player_id, " Token: ", token)
 	return_login_request.rpc_id(player_id, result, player_id, token)
 	await get_tree().create_timer(1).timeout 
+	network.disconnect_peer(player_id)
+	pass
+
+
+@rpc("any_peer", "reliable")
+func create_new_account_request(username: String, password: String) -> void:
+	var player_id := gateway_api.get_remote_sender_id()
+	var valid_request = true
+	if username == "":
+		valid_request = false
+	if password == "" or password.length() < 10:
+		valid_request = false
+	if valid_request == false:
+		return_create_new_account_request(valid_request, player_id, 1)
+	else:
+		Authenticate.create_account(username.to_lower(), password, player_id)
+	pass
+
+
+@rpc("reliable")
+func return_create_new_account_request(result: bool, player_id: int, message: int) -> void:
+	return_create_new_account_request.rpc_id(player_id, result, player_id, message)
+	# 1 = failed to create, 2 = existing user, 3 = welcome
+	await get_tree().create_timer(1).timeout
 	network.disconnect_peer(player_id)
 	pass

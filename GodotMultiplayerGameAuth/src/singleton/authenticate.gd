@@ -37,8 +37,8 @@ func _peer_disconnected(gateway_id: int) -> void:
 
 @rpc("any_peer", "reliable")
 func authenticate_player(username: String, password: String, player_id: int) -> void:
-	print("Authentication request received")
-	var token
+	print("Authentication request received for user: ", username)
+	var token := ""
 	var gateway_id = multiplayer.get_remote_sender_id()
 	var result
 	print("Starting authentication")
@@ -71,4 +71,31 @@ func authenticate_player(username: String, password: String, player_id: int) -> 
 @rpc("reliable")
 func authenticate_result(_result: bool, _player_id: int, _token: String) -> void:
 	# Only implemented on gateway client
+	pass
+
+
+@rpc("reliable", "any_peer")
+func create_account(username: String, password: String, player_id: int) -> void:
+	print("Create account started")
+	var gateway_id := multiplayer.get_remote_sender_id()
+	var result
+	var message
+	if PlayerData.player_data.has(username):
+		result = false
+		message = 2
+	else:
+		result = true
+		message = 3
+		PlayerData.player_data[username] = { "Password": password }
+		PlayerData.save_player_ids()
+	create_account_result.rpc_id(gateway_id, result, player_id, message)
+	print("Reload IDs")
+	PlayerData.load_player_ids() # Refresh the player data with new account if created
+	print("PlayerData: ", PlayerData.player_data)
+	pass
+
+
+@rpc("reliable")
+func create_account_result(_result: bool, _player_id: int, _message: int) -> void:
+	# Implemented on Gateway client
 	pass

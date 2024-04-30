@@ -6,6 +6,7 @@
 script = ExtResource("1_0nwsm")
 
 [node name="LoginScreen" type="Control" parent="."]
+unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,46 +40,179 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="LoginScreen/Panel/MarginContainer"]
+[node name="Login" type="VBoxContainer" parent="LoginScreen/Panel/MarginContainer"]
 layout_mode = 2
 
-[node name="Login" type="Label" parent="LoginScreen/Panel/MarginContainer/VBoxContainer"]
+[node name="Login" type="Label" parent="LoginScreen/Panel/MarginContainer/Login"]
 layout_mode = 2
 text = "LOGIN"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/Login"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="LoginScreen/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer"]
+custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 text = "Username"
 
-[node name="Username" type="LineEdit" parent="LoginScreen/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Username" type="LineEdit" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Test"
 placeholder_text = "username"
 caret_blink = true
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/Login"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="LoginScreen/Panel/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer2"]
+custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 text = "Password "
 
-[node name="Password" type="LineEdit" parent="LoginScreen/Panel/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="Password" type="LineEdit" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer2"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Test123"
 placeholder_text = "password"
 caret_blink = true
 
-[node name="LoginButton" type="Button" parent="LoginScreen/Panel/MarginContainer/VBoxContainer"]
+[node name="LoginButton" type="Button" parent="LoginScreen/Panel/MarginContainer/Login"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Login"
 
-[connection signal="pressed" from="LoginScreen/Panel/MarginContainer/VBoxContainer/LoginButton" to="." method="_on_login_button_pressed"]
+[node name="CreateAccountButton" type="Button" parent="LoginScreen/Panel/MarginContainer/Login"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Create Account"
+
+[node name="RegisterScreen" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="RegisterScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="RegisterScreen/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -121.5
+offset_top = -74.0
+offset_right = 121.5
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Register" type="VBoxContainer" parent="RegisterScreen/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="Register" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register"]
+layout_mode = 2
+text = "REGISTER"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer"]
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+text = "Username"
+
+[node name="NewUsername" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Test"
+placeholder_text = "username"
+caret_blink = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer3"]
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+text = "Email Address"
+
+[node name="EmailAddress" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Test"
+placeholder_text = "username"
+caret_blink = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer2"]
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+text = "Password "
+
+[node name="NewPassword" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Test123"
+placeholder_text = "password"
+caret_blink = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer4"]
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+text = "Repeat Password "
+
+[node name="RepeatPassword" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer4"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Test123"
+placeholder_text = "password"
+caret_blink = true
+
+[node name="ConfirmButton" type="Button" parent="RegisterScreen/Panel/MarginContainer/Register"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Confirm"
+
+[node name="BackButton" type="Button" parent="RegisterScreen/Panel/MarginContainer/Register"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Back"
+
+[connection signal="pressed" from="LoginScreen/Panel/MarginContainer/Login/LoginButton" to="." method="_on_login_button_pressed"]
+[connection signal="pressed" from="LoginScreen/Panel/MarginContainer/Login/CreateAccountButton" to="." method="_on_create_account_button_pressed"]
+[connection signal="pressed" from="RegisterScreen/Panel/MarginContainer/Register/ConfirmButton" to="." method="_on_confirm_button_pressed"]
+[connection signal="pressed" from="RegisterScreen/Panel/MarginContainer/Register/BackButton" to="." method="_on_back_button_pressed"]

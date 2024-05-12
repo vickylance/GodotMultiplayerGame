@@ -1,0 +1,205 @@
+[gd_scene load_steps=12 format=3 uid="uid://bx1r38ckhei84"]
+
+[ext_resource type="PackedScene" uid="uid://cshqms135wpu5" path="res://src/main/weapons/base_weapon.tscn" id="1_qgj4t"]
+[ext_resource type="PackedScene" uid="uid://i022uf4cyrfm" path="res://src/main/bullet.tscn" id="2_5pcn5"]
+[ext_resource type="Texture2D" uid="uid://dh7qraebrvgyo" path="res://assets/weapons/weapon_gun.png" id="2_n150s"]
+[ext_resource type="AudioStream" uid="uid://d2pw40uqdq48h" path="res://audio/sounds/weapon/9mm-shot.mp3" id="2_qbk4b"]
+[ext_resource type="Texture2D" uid="uid://bhxtaftlbc1gq" path="res://assets/muzzle/shotLarge.png" id="3_8rj7h"]
+[ext_resource type="AudioStream" uid="uid://cmaotj6ovu6dg" path="res://audio/sounds/weapon/9mm-reload.mp3" id="3_frxi7"]
+[ext_resource type="AudioStream" uid="uid://cl5vi0wjlgdtv" path="res://audio/sounds/weapon/empty-gun-shot.mp3" id="4_vtxmq"]
+
+[sub_resource type="Animation" id="Animation_s6cv8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MuzzleFlash:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MuzzleFlash:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("EndOfGun/PointLight2D:enabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_1vkk5"]
+resource_name = "muzzle_flash"
+length = 0.1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MuzzleFlash:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MuzzleFlash:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("EndOfGun/PointLight2D:enabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_alqin"]
+resource_name = "reload"
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(1),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_stop_reload"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -1.5708, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, -1.309, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gfcwc"]
+_data = {
+"RESET": SubResource("Animation_s6cv8"),
+"muzzle_flash": SubResource("Animation_1vkk5"),
+"reload": SubResource("Animation_alqin")
+}
+
+[node name="Pistol" instance=ExtResource("1_qgj4t")]
+bullet = ExtResource("2_5pcn5")
+
+[node name="Sprite" parent="." index="0"]
+texture_filter = 1
+texture = ExtResource("2_n150s")
+offset = Vector2(5, 2.08165e-12)
+
+[node name="EndOfGun" parent="." index="1"]
+position = Vector2(17, 0)
+
+[node name="PointLight2D" parent="EndOfGun" index="0"]
+enabled = false
+color = Color(0.884758, 0.751257, 0.232438, 1)
+
+[node name="AttackCooldown" parent="." index="2"]
+wait_time = 0.7
+one_shot = true
+
+[node name="MuzzleFlash" parent="." index="3"]
+texture_filter = 1
+position = Vector2(17, 3.09047e-14)
+rotation = -1.5708
+scale = Vector2(1e-05, 1e-05)
+texture = ExtResource("3_8rj7h")
+offset = Vector2(2.08165e-12, 10)
+
+[node name="AnimationPlayer" parent="." index="4"]
+libraries = {
+"": SubResource("AnimationLibrary_gfcwc")
+}
+
+[node name="GunFireSound" parent="." index="5"]
+stream = ExtResource("2_qbk4b")
+volume_db = -10.0
+
+[node name="ReloadSound" parent="." index="6"]
+stream = ExtResource("3_frxi7")
+volume_db = -10.0
+
+[node name="OutOfAmmoSound" parent="." index="7"]
+stream = ExtResource("4_vtxmq")
+volume_db = -10.0

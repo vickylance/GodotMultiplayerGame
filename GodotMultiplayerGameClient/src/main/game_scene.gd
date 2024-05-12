@@ -1,12 +1,13 @@
-extends Control
+extends Node
 
 @onready var stats_panel: Control = %StatsPanel
 var show_stats_toggle := false
 
 
 func _ready() -> void:
-	ServerCommunication.fetch_skill_damage("Ice Spear", get_instance_id())
-	ServerCommunication.fetch_player_stats()
+	if ServerCommunication.token:
+		ServerCommunication.fetch_skill_damage("Ice Spear", get_instance_id())
+		ServerCommunication.fetch_player_stats()
 	pass
 
 

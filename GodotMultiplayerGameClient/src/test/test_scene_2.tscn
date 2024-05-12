@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://bjo68iur5sul2"]
+
+[ext_resource type="PackedScene" uid="uid://iuoylqmy0fm6" path="res://src/main/map/tile_map.tscn" id="1_t5gge"]
+[ext_resource type="Script" path="res://src/test/test_scene_2.gd" id="1_xfv47"]
+[ext_resource type="PackedScene" uid="uid://bq6iw0ftowqc2" path="res://src/main/player.tscn" id="2_cfy0u"]
+[ext_resource type="Texture2D" uid="uid://cqxmw73nq1xlb" path="res://assets/lights/cone_light/light.png" id="3_3mv3g"]
+[ext_resource type="PackedScene" uid="uid://e1kscxre7ift" path="res://src/main/camera.tscn" id="3_pnjc8"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_qdw5c"]
+cull_mode = 1
+polygon = PackedVector2Array(759, 843, 870, 576, 724, 353, 819, 352, 934, 565, 1028, 345, 1141, 346, 987, 565, 1131, 848, 1033, 846, 934, 594, 851, 844)
+
+[node name="Node" type="Node"]
+script = ExtResource("1_xfv47")
+
+[node name="TileMap" parent="." instance=ExtResource("1_t5gge")]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.210507, 0.210507, 0.210507, 1)
+
+[node name="Camera" parent="." instance=ExtResource("3_pnjc8")]
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-73, -14)
+occluder = SubResource("OccluderPolygon2D_qdw5c")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+visible = false
+polygon = PackedVector2Array(756, 532, 931, 346, 1253, 436, 994, 727)
+
+[node name="Player" parent="." instance=ExtResource("2_cfy0u")]
+position = Vector2(815, 560)
+rotation = 0.0303308
+metadata/_edit_group_ = true
+
+[node name="PointLight2D" type="PointLight2D" parent="Player"]
+z_index = -1
+position = Vector2(-9.45076, -14.7202)
+rotation = -1.5708
+energy = 0.5
+shadow_enabled = true
+texture = ExtResource("3_3mv3g")
+offset = Vector2(2.08165e-12, 365)
+texture_scale = 0.5

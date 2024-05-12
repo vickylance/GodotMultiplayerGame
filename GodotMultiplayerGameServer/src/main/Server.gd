@@ -4,10 +4,10 @@ class_name GameServer
 var network := ENetMultiplayerPeer.new()
 var game_server_port := 1909
 var max_players := 150
-
 var expected_tokens: Array[String] = []
 
 @onready var player_verification_process := $PlayerVerification
+
 
 func _ready() -> void:
 	start_server()

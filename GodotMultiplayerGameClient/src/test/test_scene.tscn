@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://dxxhm420r06xv"]
+
+[ext_resource type="PackedScene" uid="uid://cfq2ance7g2wf" path="res://src/main/enemy.tscn" id="1_wd84c"]
+[ext_resource type="PackedScene" uid="uid://bq6iw0ftowqc2" path="res://src/main/player.tscn" id="2_6fbyq"]
+[ext_resource type="PackedScene" uid="uid://e1kscxre7ift" path="res://src/main/camera.tscn" id="3_uruks"]
+[ext_resource type="PackedScene" uid="uid://iuoylqmy0fm6" path="res://src/main/map/tile_map.tscn" id="4_o1enx"]
+
+[node name="TestScene" type="Node"]
+
+[node name="TileMap" parent="." instance=ExtResource("4_o1enx")]
+z_index = -11
+
+[node name="Enemy" parent="." instance=ExtResource("1_wd84c")]
+position = Vector2(1016, 448)
+
+[node name="Camera" parent="." instance=ExtResource("3_uruks")]
+zoom = Vector2(2, 2)
+process_callback = 0
+position_smoothing_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("2_6fbyq")]
+position = Vector2(558, 555)

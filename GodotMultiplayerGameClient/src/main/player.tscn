@@ -1,0 +1,69 @@
+[gd_scene load_steps=11 format=3 uid="uid://bq6iw0ftowqc2"]
+
+[ext_resource type="Script" path="res://src/main/player.gd" id="1_4hpk1"]
+[ext_resource type="PackedScene" uid="uid://i022uf4cyrfm" path="res://src/main/bullet.tscn" id="2_bju0f"]
+[ext_resource type="Texture2D" uid="uid://bqsd4afebx677" path="res://assets/characters/survivor_1/survivor1_pointing.png" id="3_hftu8"]
+[ext_resource type="PackedScene" uid="uid://fu8w6ssqtgh0" path="res://src/main/state_machine/state_machine.tscn" id="4_q4wfv"]
+[ext_resource type="PackedScene" uid="uid://kj208wgjf6jd" path="res://src/main/components/health/health_component.tscn" id="5_hh1kk"]
+[ext_resource type="PackedScene" uid="uid://6qdobj4c1lsl" path="res://src/main/components/experience/experience_component.tscn" id="6_o6d30"]
+[ext_resource type="PackedScene" uid="uid://dm0n00j7hnhko" path="res://src/main/components/weapon_manager/weapon_manager_component.tscn" id="7_1ay7s"]
+[ext_resource type="PackedScene" uid="uid://bpm71viudlufd" path="res://src/main/components/movement_component/movement_component.tscn" id="7_cgse0"]
+[ext_resource type="PackedScene" uid="uid://bx1r38ckhei84" path="res://src/main/weapons/pistol.tscn" id="9_kkqhd"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_whfnn"]
+radius = 14.0
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+z_index = 5
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_4hpk1")
+bullet = ExtResource("2_bju0f")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("3_hftu8")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(-3, 0)
+shape = SubResource("CircleShape2D_whfnn")
+
+[node name="GunPos" type="RemoteTransform2D" parent="."]
+z_index = 6
+position = Vector2(15, 13)
+
+[node name="StateMachine" parent="." instance=ExtResource("4_q4wfv")]
+unique_name_in_owner = true
+
+[node name="HealthComponent" parent="." instance=ExtResource("5_hh1kk")]
+unique_name_in_owner = true
+max_hp = 100.0
+
+[node name="ExperienceComponent" parent="." instance=ExtResource("6_o6d30")]
+unique_name_in_owner = true
+
+[node name="MovementComponent" parent="." node_paths=PackedStringArray("player") instance=ExtResource("7_cgse0")]
+unique_name_in_owner = true
+player = NodePath("..")
+
+[node name="WeaponManagerComponent" parent="." node_paths=PackedStringArray("gun_pos") instance=ExtResource("7_1ay7s")]
+gun_pos = NodePath("../GunPos")
+
+[node name="Pistol" parent="WeaponManagerComponent" instance=ExtResource("9_kkqhd")]
+visible = false
+position = Vector2(15, 13)
+
+[node name="Health" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="Health"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -21.0
+offset_top = -18.0
+offset_right = 19.0
+offset_bottom = 22.0
+
+[node name="HealthBar" type="TextureProgressBar" parent="Health/Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+fill_mode = 3

@@ -1,0 +1,98 @@
+[gd_scene load_steps=12 format=3 uid="uid://cfq2ance7g2wf"]
+
+[ext_resource type="Script" path="res://src/main/enemy.gd" id="1_jjkwh"]
+[ext_resource type="Texture2D" uid="uid://dgc5aqwmeyqrs" path="res://assets/characters/soldier_1/soldier1_pointing.png" id="2_hixjw"]
+[ext_resource type="PackedScene" uid="uid://bi7ko61dgjsxb" path="res://src/main/components/hurt_box/hurt_box_component.tscn" id="3_nibol"]
+[ext_resource type="PackedScene" uid="uid://fu8w6ssqtgh0" path="res://src/main/state_machine/state_machine.tscn" id="3_u01b5"]
+[ext_resource type="PackedScene" uid="uid://b761xtxnjn5u3" path="res://src/main/state_machine/enemy_states/enemy_idle_state.tscn" id="4_5k3u5"]
+[ext_resource type="PackedScene" uid="uid://kj208wgjf6jd" path="res://src/main/components/health/health_component.tscn" id="4_mc71q"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tn2na"]
+radius = 16.0312
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vs4ss"]
+size = Vector2(156, 154)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yhaks"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oq7ls"]
+radius = 693.141
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ot5ig"]
+radius = 1005.01
+
+[node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
+z_index = 5
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_jjkwh")
+hitpoints = 20
+
+[node name="Sprite" type="Sprite2D" parent="."]
+modulate = Color(1, 0.225333, 0.17, 1)
+texture = ExtResource("2_hixjw")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(-3, 0)
+shape = SubResource("CircleShape2D_tn2na")
+
+[node name="HitBox" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource("RectangleShape2D_vs4ss")
+
+[node name="HurtBox" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("3_nibol")]
+unique_name_in_owner = true
+collision_layer = 4
+collision_mask = 0
+health_component = NodePath("../HealthComponent")
+
+[node name="Shape" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(-3, 0)
+shape = SubResource("CircleShape2D_yhaks")
+
+[node name="DetectionArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 2
+
+[node name="Shape" type="CollisionShape2D" parent="DetectionArea"]
+position = Vector2(3, 0)
+shape = SubResource("CircleShape2D_oq7ls")
+
+[node name="PatrolArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+visible = false
+position = Vector2(0, -2)
+collision_layer = 0
+collision_mask = 0
+
+[node name="Area" type="CollisionShape2D" parent="PatrolArea"]
+shape = SubResource("CircleShape2D_ot5ig")
+disabled = true
+
+[node name="Muzzle" type="Marker2D" parent="."]
+unique_name_in_owner = true
+
+[node name="HealthComponent" parent="." instance=ExtResource("4_mc71q")]
+unique_name_in_owner = true
+max_hp = 20.0
+
+[node name="StateMachine" parent="." node_paths=PackedStringArray("initial_state") instance=ExtResource("3_u01b5")]
+initial_state = NodePath("EnemyPatrolState")
+
+[node name="EnemyPatrolState" parent="StateMachine" node_paths=PackedStringArray("enemy", "patrol_area") instance=ExtResource("4_5k3u5")]
+enemy = NodePath("../..")
+patrol_area = NodePath("../../PatrolArea/Area")
+move_speed = 300.0
+
+[node name="EnemyChaseState" type="Node" parent="StateMachine"]
+
+[node name="EnemyAttackState" type="Node" parent="StateMachine"]
+
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]

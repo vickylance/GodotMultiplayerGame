@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://i022uf4cyrfm"]
+
+[ext_resource type="Script" path="res://src/main/bullet.gd" id="1_yg6bw"]
+[ext_resource type="Texture2D" uid="uid://bl08fp2mww4ot" path="res://assets/bullet/bulletDark1_outline.png" id="2_y8foo"]
+[ext_resource type="Texture2D" uid="uid://d1fr8egqi0880" path="res://assets/lights/circular_1.png" id="3_tb54a"]
+[ext_resource type="PackedScene" uid="uid://3v6dwbg7tjgm" path="res://src/main/components/hit_box/hit_box_component.tscn" id="4_0ffaq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_03bem"]
+size = Vector2(8, 18)
+
+[node name="Bullet" type="Node2D" groups=["bullet"]]
+z_index = 6
+script = ExtResource("1_yg6bw")
+dmg = 5
+metadata/_edit_group_ = true
+
+[node name="Sprite" type="Sprite2D" parent="."]
+rotation = 1.5708
+texture = ExtResource("2_y8foo")
+
+[node name="Light" type="PointLight2D" parent="."]
+color = Color(0.983666, 0.763586, 0.27021, 1)
+energy = 0.5
+texture = ExtResource("3_tb54a")
+
+[node name="KillTimer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 2.0
+one_shot = true
+autostart = true
+
+[node name="HitBox" parent="." instance=ExtResource("4_0ffaq")]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 5
+
+[node name="Shape" type="CollisionShape2D" parent="HitBox"]
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_03bem")
+
+[connection signal="timeout" from="KillTimer" to="." method="_on_kill_timer_timeout"]
+[connection signal="area_entered" from="HitBox" to="HitBox" method="_on_area_entered"]

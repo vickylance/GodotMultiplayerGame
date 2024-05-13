@@ -50,8 +50,7 @@ func shoot() -> void:
 		var bullet_instance = bullet.instantiate()
 		bullet_instance.transform = end_of_gun.global_transform
 		get_tree().root.add_child(bullet_instance)
-		print(bullet_instance)
-		#var direction = (end_of_gun.global_position - global_position).normalized()
+		# var direction = (end_of_gun.global_position - global_position).normalized()
 		# GlobalSignals.bullet_fired.emit(bullet_instance, team, end_of_gun.global_position, direction)
 		attack_cooldown.start()
 		animation_player.play("muzzle_flash")

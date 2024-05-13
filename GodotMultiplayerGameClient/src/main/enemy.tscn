@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cfq2ance7g2wf"]
+[gd_scene load_steps=14 format=3 uid="uid://cfq2ance7g2wf"]
 
 [ext_resource type="Script" path="res://src/main/enemy.gd" id="1_jjkwh"]
 [ext_resource type="Texture2D" uid="uid://dgc5aqwmeyqrs" path="res://assets/characters/soldier_1/soldier1_pointing.png" id="2_hixjw"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://fu8w6ssqtgh0" path="res://src/main/state_machine/state_machine.tscn" id="3_u01b5"]
 [ext_resource type="PackedScene" uid="uid://b761xtxnjn5u3" path="res://src/main/state_machine/enemy_states/enemy_idle_state.tscn" id="4_5k3u5"]
 [ext_resource type="PackedScene" uid="uid://kj208wgjf6jd" path="res://src/main/components/health/health_component.tscn" id="4_mc71q"]
+[ext_resource type="Script" path="res://src/main/pivot.gd" id="7_5snyn"]
+[ext_resource type="PackedScene" uid="uid://0q5nkpr3tuor" path="res://src/main/components/health_bar_component/health_bar_component.tscn" id="7_sklub"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tn2na"]
 radius = 16.0312
@@ -93,6 +95,16 @@ move_speed = 300.0
 [node name="EnemyChaseState" type="Node" parent="StateMachine"]
 
 [node name="EnemyAttackState" type="Node" parent="StateMachine"]
+
+[node name="Pivot" type="Node2D" parent="."]
+script = ExtResource("7_5snyn")
+
+[node name="HealthBar" parent="Pivot" node_paths=PackedStringArray("health_component") instance=ExtResource("7_sklub")]
+offset_left = -25.0
+offset_top = -30.0
+offset_right = 25.0
+offset_bottom = -26.0
+health_component = NodePath("../../HealthComponent")
 
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]

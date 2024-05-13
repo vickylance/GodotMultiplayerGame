@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bq6iw0ftowqc2"]
+[gd_scene load_steps=13 format=3 uid="uid://bq6iw0ftowqc2"]
 
 [ext_resource type="Script" path="res://src/main/player.gd" id="1_4hpk1"]
 [ext_resource type="PackedScene" uid="uid://i022uf4cyrfm" path="res://src/main/bullet.tscn" id="2_bju0f"]
@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://dm0n00j7hnhko" path="res://src/main/components/weapon_manager/weapon_manager_component.tscn" id="7_1ay7s"]
 [ext_resource type="PackedScene" uid="uid://bpm71viudlufd" path="res://src/main/components/movement_component/movement_component.tscn" id="7_cgse0"]
 [ext_resource type="PackedScene" uid="uid://bx1r38ckhei84" path="res://src/main/weapons/pistol.tscn" id="9_kkqhd"]
+[ext_resource type="Script" path="res://src/main/pivot.gd" id="10_305xu"]
+[ext_resource type="PackedScene" uid="uid://0q5nkpr3tuor" path="res://src/main/components/health_bar_component/health_bar_component.tscn" id="10_jtnjb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_whfnn"]
 radius = 14.0
@@ -52,18 +54,12 @@ gun_pos = NodePath("../GunPos")
 visible = false
 position = Vector2(15, 13)
 
-[node name="Health" type="CanvasLayer" parent="."]
+[node name="Pivot" type="Node2D" parent="."]
+script = ExtResource("10_305xu")
 
-[node name="Control" type="Control" parent="Health"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = -21.0
-offset_top = -18.0
-offset_right = 19.0
-offset_bottom = 22.0
-
-[node name="HealthBar" type="TextureProgressBar" parent="Health/Control"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-fill_mode = 3
+[node name="HealthBar" parent="Pivot" node_paths=PackedStringArray("health_component") instance=ExtResource("10_jtnjb")]
+offset_left = -25.0
+offset_top = -30.0
+offset_right = 25.0
+offset_bottom = -26.0
+health_component = NodePath("../../HealthComponent")

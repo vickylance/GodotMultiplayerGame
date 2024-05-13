@@ -1,4 +1,5 @@
 extends Node
+class_name WeaponManagerComponent
 
 signal weapon_changed(new_weapon)
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bq6iw0ftowqc2"]
+[gd_scene load_steps=15 format=3 uid="uid://bq6iw0ftowqc2"]
 
 [ext_resource type="Script" path="res://src/main/player.gd" id="1_4hpk1"]
 [ext_resource type="PackedScene" uid="uid://i022uf4cyrfm" path="res://src/main/bullet.tscn" id="2_bju0f"]
@@ -11,9 +11,16 @@
 [ext_resource type="PackedScene" uid="uid://bx1r38ckhei84" path="res://src/main/weapons/pistol.tscn" id="9_kkqhd"]
 [ext_resource type="Script" path="res://src/main/pivot.gd" id="10_305xu"]
 [ext_resource type="PackedScene" uid="uid://0q5nkpr3tuor" path="res://src/main/components/health_bar_component/health_bar_component.tscn" id="10_jtnjb"]
+[ext_resource type="Script" path="res://src/main/ammo_player_hud.gd" id="12_3u7pb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_whfnn"]
 radius = 14.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_efxrp"]
+font_size = 40
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 1)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 z_index = 5
@@ -63,3 +70,32 @@ offset_top = -30.0
 offset_right = 25.0
 offset_bottom = -26.0
 health_component = NodePath("../../HealthComponent")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Ammo" type="Label" parent="HUD" node_paths=PackedStringArray("weapon_manager_component")]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -141.0
+offset_top = -62.0
+offset_right = -41.0
+offset_bottom = -39.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_vertical = 8
+text = "34 / 50"
+label_settings = SubResource("LabelSettings_efxrp")
+horizontal_alignment = 2
+vertical_alignment = 1
+script = ExtResource("12_3u7pb")
+weapon_manager_component = NodePath("../../WeaponManagerComponent")
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

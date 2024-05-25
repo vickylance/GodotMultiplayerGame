@@ -3,10 +3,11 @@ extends CharacterBody2D
 @export var hitpoints: int
 
 @onready var hit_box: Area2D = %HitBox
-@onready var hurt_box: Area2D = %HurtBox
+@onready var hurt_box: HurtBoxComponent = %HurtBox
 @onready var detection_area: Area2D = %DetectionArea
 @onready var muzzle: Marker2D = %Muzzle
 @onready var health_component: HealthComponent = %HealthComponent
+@onready var damage_popup_component: DamagePopupComponent = %DamagePopupComponent
 
 var motion := Vector2.ZERO
 var player_targets = []
@@ -17,6 +18,7 @@ var chase_player := false
 
 func _ready() -> void:
 	health_component.dead.connect(kill)
+	hurt_box.damage_taken.connect(damage_taken)
 	pass
 
 
@@ -54,4 +56,9 @@ func _on_detection_area_body_exited(body: Node2D) -> void:
 
 func kill() -> void:
 	queue_free()
+	pass
+
+
+func damage_taken(dmg: float) -> void:
+	damage_popup_component.popup(dmg)
 	pass

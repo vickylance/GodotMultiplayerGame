@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://civdw765j2of"]
+
+[ext_resource type="Script" path="res://src/main/components/ui/damage_number_component/damage_popup_component.gd" id="1_a4dt4"]
+
+[node name="DamagePopupComponent" type="Marker2D"]
+script = ExtResource("1_a4dt4")

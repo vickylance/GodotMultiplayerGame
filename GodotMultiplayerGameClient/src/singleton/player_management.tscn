@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://b336qq1y7ivr8"]
+
+[ext_resource type="Script" path="res://src/singleton/player_management.gd" id="1_y1frt"]
+[ext_resource type="PackedScene" uid="uid://bfsjjpj8jhsbb" path="res://src/main/player_template.tscn" id="2_lpcv2"]
+
+[node name="PlayerManagement" type="Node"]
+script = ExtResource("1_y1frt")
+player_template = ExtResource("2_lpcv2")

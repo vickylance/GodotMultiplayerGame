@@ -5,6 +5,7 @@ var show_stats_toggle := false
 
 
 func _ready() -> void:
+	print("CURR: scen", get_tree().current_scene)
 	if ServerCommunication.token:
 		ServerCommunication.fetch_skill_damage("Ice Spear", get_instance_id())
 		ServerCommunication.fetch_player_stats()

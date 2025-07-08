@@ -20,7 +20,6 @@ func return_skill_damage(_skill_damage, _requester) -> void:
 
 @rpc("any_peer", "reliable")
 func fetch_player_stats() -> void:
-	print("Yolo")
 	var player_id := multiplayer.get_remote_sender_id()
 	var player_stats = get_node("/root/Server/" + str(player_id)).player_stats # TODO: Refactor better
 	print("Got the player stats: ", player_stats)
@@ -51,4 +50,16 @@ func return_token(token: String) -> void:
 func return_token_verification_results(player_id: int, result: bool) -> void:
 	print("return_token_verification_results: ", player_id, " result: ", result)
 	return_token_verification_results.rpc_id(player_id, player_id, result)
+	if result == true:
+		spawn_other_player.rpc_id(0, player_id, Vector2(450, 220))
+	pass
+
+
+@rpc("reliable")
+func spawn_other_player(_player_id: int, _spawn_position: Vector2) -> void:
+	pass
+
+
+@rpc("reliable")
+func despawn_other_player(_player_id: int) -> void:
 	pass

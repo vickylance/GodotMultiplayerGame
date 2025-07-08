@@ -92,3 +92,15 @@ func return_token_verification_results(_player_id: int, result: bool) -> void:
 		print("Player token verification failed")
 		player_login_verification_failed.emit()
 	pass
+
+
+@rpc("reliable")
+func spawn_other_player(player_id: int, spawn_position: Vector2) -> void:
+	PlayerManagement.spawn_other_player(player_id, spawn_position)
+	pass
+
+
+@rpc("reliable")
+func despawn_other_player(player_id: int) -> void:
+	PlayerManagement.despawn_other_player(player_id)
+	pass

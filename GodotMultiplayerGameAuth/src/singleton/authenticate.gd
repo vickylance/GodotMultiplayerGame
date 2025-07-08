@@ -11,6 +11,8 @@ func _ready() -> void:
 
 
 func start_server() -> void:
+	"""Start the Authentication server to accept connections from Gateway Clients
+	"""
 	var err := network.create_server(auth_server_port, max_gateways)
 	assert(err == OK)
 	multiplayer.multiplayer_peer = network
@@ -42,7 +44,7 @@ func authenticate_player(username: String, password: String, player_id: int) -> 
 	var hashed_password
 	var gateway_id = multiplayer.get_remote_sender_id()
 	var result
-	print("Starting authentication")
+	print("Starting authentication", PlayerData.player_data, username)
 	if not PlayerData.player_data.has(username):
 		print("User not recognized")
 		result = false
@@ -72,12 +74,15 @@ func authenticate_player(username: String, password: String, player_id: int) -> 
 
 @rpc("reliable")
 func authenticate_result(_result: bool, _player_id: int, _token: String) -> void:
-	# Only implemented on gateway client
+	"""Implemented on Gateway client to receive the Player login result
+	"""
 	pass
 
 
 @rpc("reliable", "any_peer")
 func create_account(username: String, password: String, player_id: int) -> void:
+	""" Creates a new user with the given username & password. The player_id is network player_id.
+	"""
 	print("Create account started")
 	var gateway_id := multiplayer.get_remote_sender_id()
 	var result
@@ -101,7 +106,8 @@ func create_account(username: String, password: String, player_id: int) -> void:
 
 @rpc("reliable")
 func create_account_result(_result: bool, _player_id: int, _message: int) -> void:
-	# Implemented on Gateway client
+	"""Implemented on Gateway client to receive the Player creation result
+	"""
 	pass
 
 

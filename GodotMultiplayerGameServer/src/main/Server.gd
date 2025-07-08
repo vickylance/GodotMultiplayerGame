@@ -37,6 +37,7 @@ func _peer_disconnected(player_id: int) -> void:
 	print("Player disconnected: " + str(player_id))
 	if has_node(str(player_id)):
 		get_node(str(player_id)).queue_free()
+		ServerCommunication.despawn_other_player.rpc_id(0, player_id)
 	pass
 
 
@@ -50,6 +51,5 @@ func _on_token_expiration_timer_timeout() -> void:
 			token_time = int(expected_tokens[i].right(10))
 			if current_time - token_time >= 30:
 				expected_tokens.remove_at(i)
-	print("Expected Tokens: ")
-	print(expected_tokens)
 	pass
+

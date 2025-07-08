@@ -1,10 +1,9 @@
 extends Camera2D
 
-
-@onready var player: Player = get_tree().get_first_node_in_group("player")
+@export var target: Player
 
 
 func _physics_process(_delta: float) -> void:
-	if player != null:
-		global_position = player.global_position
+	if target != null:
+		global_position = target.global_position
 	pass

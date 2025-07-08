@@ -1,0 +1,50 @@
+[gd_scene load_steps=9 format=3 uid="uid://bfsjjpj8jhsbb"]
+
+[ext_resource type="Script" path="res://src/main/player_template.gd" id="1_fm1ho"]
+[ext_resource type="Texture2D" uid="uid://bqsd4afebx677" path="res://assets/characters/survivor_1/survivor1_pointing.png" id="3_fx7h0"]
+[ext_resource type="PackedScene" uid="uid://fu8w6ssqtgh0" path="res://src/main/state_machine/state_machine.tscn" id="4_csxak"]
+[ext_resource type="PackedScene" uid="uid://kj208wgjf6jd" path="res://src/main/components/health/health_component.tscn" id="5_7ab44"]
+[ext_resource type="PackedScene" uid="uid://6qdobj4c1lsl" path="res://src/main/components/experience/experience_component.tscn" id="6_mcxla"]
+[ext_resource type="Script" path="res://src/main/pivot.gd" id="10_euu15"]
+[ext_resource type="PackedScene" uid="uid://0q5nkpr3tuor" path="res://src/main/components/health_bar_component/health_bar_component.tscn" id="11_06ym0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_whfnn"]
+radius = 14.0
+
+[node name="PlayerTemplate" type="CharacterBody2D" groups=["player"]]
+z_index = 5
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_fm1ho")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+self_modulate = Color(0.527613, 0.351154, 0.41204, 1)
+texture = ExtResource("3_fx7h0")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(-3, 0)
+shape = SubResource("CircleShape2D_whfnn")
+
+[node name="GunPos" type="RemoteTransform2D" parent="."]
+z_index = 6
+position = Vector2(15, 13)
+
+[node name="StateMachine" parent="." instance=ExtResource("4_csxak")]
+unique_name_in_owner = true
+
+[node name="HealthComponent" parent="." instance=ExtResource("5_7ab44")]
+unique_name_in_owner = true
+max_hp = 100.0
+
+[node name="ExperienceComponent" parent="." instance=ExtResource("6_mcxla")]
+unique_name_in_owner = true
+
+[node name="Pivot" type="Node2D" parent="."]
+script = ExtResource("10_euu15")
+
+[node name="HealthBar" parent="Pivot" node_paths=PackedStringArray("health_component") instance=ExtResource("11_06ym0")]
+offset_left = -25.0
+offset_top = -30.0
+offset_right = 25.0
+offset_bottom = -26.0
+health_component = NodePath("../../HealthComponent")

@@ -21,6 +21,8 @@ func _process(_delta: float) -> void:
 
 
 func start_server() -> void:
+	"""Start the Authentication server to accept connections from Game Server Clients
+	"""
 	var err := network.create_server(auth_server_port, max_game_servers)
 	assert(err == OK)
 	
@@ -49,6 +51,8 @@ func _peer_disconnected(game_server_id: int) -> void:
 
 
 func distribute_login_tokens(token: String, game_server: String) -> void:
+	"""Distribute the created token to Game Servers when a Player logins
+	"""
 	print("Token: ", token, " Gameserver: ", game_server)
 	var game_server_peer_id = game_server_list[game_server]
 	receive_login_token.rpc_id(game_server_peer_id, token)
@@ -57,5 +61,6 @@ func distribute_login_tokens(token: String, game_server: String) -> void:
 
 @rpc("reliable")
 func receive_login_token(_token: String) -> void:
-	# Implemented on Game Servers
+	"""Implemented on Game Servers to receive the created token
+	"""
 	pass

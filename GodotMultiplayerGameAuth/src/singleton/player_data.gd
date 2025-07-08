@@ -1,12 +1,12 @@
 extends Node
 
-var player_data: Dictionary = {"Test":{"Password":"Test123"}}
+var player_data: Dictionary = {}
 
 
 func _ready() -> void:
+	print(OS.get_user_data_dir())
 	if not DirAccess.dir_exists_absolute("user://data"):
 		DirAccess.make_dir_recursive_absolute("user://data")
-	save_player_ids()
 	load_player_ids()
 	pass
 

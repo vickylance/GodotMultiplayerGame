@@ -54,8 +54,6 @@ func _on_verification_expiration_timer_timeout() -> void:
 				if connected_peers.has(player_id):
 					ServerCommunication.return_token_verification_results(player_id, false)
 					main_interface.network.disconnect_peer(player_id)
-	print("Awaiting verification")
-	print(awaiting_verification)
 	pass
 
 

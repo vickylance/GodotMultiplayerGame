@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 ServerCommunication="*res://src/singleton/server_communication.gd"
 Gateway="*res://src/singleton/gateway.gd"
 PlayerStats="*res://src/singleton/player_stats.gd"
+PlayerManagement="*res://src/singleton/player_management.tscn"
 
 [display]
 

@@ -18,4 +18,7 @@ position = Vector2(176, 235)
 [node name="Enemy" parent="." instance=ExtResource("4_qoerj")]
 position = Vector2(1625, 502)
 
-[node name="Camera" parent="." instance=ExtResource("5_2ht7f")]
+[node name="Camera" parent="." node_paths=PackedStringArray("target") instance=ExtResource("5_2ht7f")]
+target = NodePath("../Player")
+
+[node name="OtherPlayers" type="Node" parent="."]

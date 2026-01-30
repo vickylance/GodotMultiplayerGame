@@ -8,17 +8,25 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="GodotMultiplayerGameGateway"
 run/main_scene="res://src/main/main.tscn"
-config/features=PackedStringArray("4.2", "Forward Plus")
+config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 Authenticate="*res://src/singleton/authenticate.gd"
 Gateway="*res://src/singleton/gateway.gd"
+
+[dotnet]
+
+project/assembly_name="GodotMultiplayerGameGateway"
 
 [editor]
 

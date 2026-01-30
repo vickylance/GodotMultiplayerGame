@@ -52,4 +52,3 @@ func _on_token_expiration_timer_timeout() -> void:
 			if current_time - token_time >= 30:
 				expected_tokens.remove_at(i)
 	pass
-

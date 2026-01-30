@@ -1,19 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://dbbjvp0x2k54g"]
+[gd_scene format=3 uid="uid://dbbjvp0x2k54g"]
 
-[ext_resource type="Script" path="res://src/main/server.gd" id="1_5soni"]
-[ext_resource type="Script" path="res://src/main/player_verification.gd" id="2_ktfmd"]
+[ext_resource type="Script" uid="uid://voyrl68gymb3" path="res://src/main/server.gd" id="1_5soni"]
+[ext_resource type="Script" uid="uid://8isa1c54wvgc" path="res://src/main/player_verification.gd" id="2_ktfmd"]
 
-[node name="Server" type="Node"]
+[node name="Server" type="Node" unique_id=690688323]
 script = ExtResource("1_5soni")
 
-[node name="PlayerVerification" type="Node" parent="."]
+[node name="PlayerVerification" type="Node" parent="." unique_id=19528519]
 script = ExtResource("2_ktfmd")
 
-[node name="VerificationExpirationTimer" type="Timer" parent="PlayerVerification"]
+[node name="VerificationExpirationTimer" type="Timer" parent="PlayerVerification" unique_id=1771587073]
 wait_time = 10.0
 autostart = true
 
-[node name="TokenExpirationTimer" type="Timer" parent="."]
+[node name="TokenExpirationTimer" type="Timer" parent="." unique_id=1746806884]
 wait_time = 10.0
 autostart = true
 

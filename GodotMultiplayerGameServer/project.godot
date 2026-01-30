@@ -8,11 +8,15 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="GodotMultiplayerGameServer"
 run/main_scene="res://src/main/server.tscn"
-config/features=PackedStringArray("4.2", "Forward Plus")
+config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -21,3 +25,7 @@ ServerData="*res://src/singleton/server_data.gd"
 ServerCommunication="*res://src/singleton/server_communication.gd"
 Combat="*res://src/singleton/combat.gd"
 GameServers="*res://src/singleton/game_servers.gd"
+
+[dotnet]
+
+project/assembly_name="GodotMultiplayerGameServer"

@@ -9,8 +9,8 @@ var X509_key_filename = "X509_key.key"
 var CN = "GodotMultiplayerGame"
 var O = "Vickylance"
 var C = "IN"
-var not_before = "20240101000000"
-var not_after = "20241230000000"
+var not_before = "20260101000000"
+var not_after = "20261230000000"
 
 
 func _ready() -> void:

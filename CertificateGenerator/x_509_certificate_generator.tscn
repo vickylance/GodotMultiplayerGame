@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://ycy1ucm8bwm1"]
+[gd_scene format=3 uid="uid://ycy1ucm8bwm1"]
 
-[ext_resource type="Script" path="res://x_509_certificate_generator.gd" id="1_emjsp"]
+[ext_resource type="Script" uid="uid://b5cqhw44x5kb8" path="res://x_509_certificate_generator.gd" id="1_emjsp"]
 
-[node name="X509CertificateGenerator" type="Node"]
+[node name="X509CertificateGenerator" type="Node" unique_id=1873590024]
 script = ExtResource("1_emjsp")

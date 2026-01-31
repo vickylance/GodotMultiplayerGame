@@ -1,7 +1,13 @@
 [gd_scene format=3 uid="uid://yxfoiqtkydn7"]
 
+[ext_resource type="Texture2D" uid="uid://c3xuhi3ovpnpx" path="res://assets/ui/hidden.png" id="1_3eh75"]
+[ext_resource type="Texture2D" uid="uid://6p4hk5rqin5f" path="res://assets/ui/eye.png" id="2_3s6yk"]
+
 [sub_resource type="GDScript" id="GDScript_rccf1"]
 script/source = "extends Node
+
+@export var show_icon: Texture2D
+@export var hide_icon: Texture2D
 
 # screens
 @onready var register_screen: Control = %RegisterScreen
@@ -11,6 +17,7 @@ script/source = "extends Node
 @onready var password: LineEdit = %Password
 @onready var login_button: Button = %LoginButton
 @onready var create_account_button: Button = %CreateAccountButton
+@onready var show_hide_login_password: TextureButton = %ShowHideLoginPassword
 # register screen
 @onready var new_username: LineEdit = %NewUsername
 @onready var email_address: LineEdit = %EmailAddress
@@ -18,6 +25,8 @@ script/source = "extends Node
 @onready var repeat_password: LineEdit = %RepeatPassword
 @onready var back_button: Button = %BackButton
 @onready var confirm_button: Button = %ConfirmButton
+@onready var show_hide_register_password: TextureButton = %ShowHideRegisterPassword
+@onready var show_hide_register_repeat_password: TextureButton = %ShowHideRegisterRepeatPassword
 
 
 func _ready():
@@ -26,6 +35,12 @@ func _ready():
 	ServerCommunication.player_login_verification_success.connect(_on_login_success)
 	Gateway.player_created_successfully.connect(_on_back_button_pressed)
 	Gateway.player_creation_failed.connect(_on_create_account_failed)
+	show_hide_login_password.toggled.connect(_on_show_hide_login_password_toggle)
+	show_hide_register_password.toggled.connect(_on_show_hide_register_password_toggle)
+	show_hide_register_repeat_password.toggled.connect(_on_show_hide_register_repeat_password_toggle)
+	back_button.button_up.connect(_on_show_hide_register_password_toggle.bind(false))
+	back_button.button_up.connect(_on_show_hide_register_repeat_password_toggle.bind(false))
+	create_account_button.button_up.connect(_on_show_hide_login_password_toggle.bind(false))
 	login_screen.show()
 	register_screen.hide()
 	pass
@@ -88,13 +103,35 @@ func _on_confirm_button_pressed() -> void:
 		back_button.disabled = true
 		Gateway.connect_to_server(new_username.text, new_password.text, true)
 	pass
+
+
+func _on_show_hide_login_password_toggle(toggle_state: bool) -> void:
+	show_hide_login_password.set_pressed_no_signal(toggle_state)
+	password.secret = not toggle_state
+	show_hide_login_password.texture_normal = show_icon if toggle_state else hide_icon
+	pass
+
+func _on_show_hide_register_password_toggle(toggle_state: bool) -> void:
+	show_hide_register_password.set_pressed_no_signal(toggle_state)
+	new_password.secret = not toggle_state
+	show_hide_register_password.texture_normal = show_icon if toggle_state else hide_icon
+	pass
+
+func _on_show_hide_register_repeat_password_toggle(toggle_state: bool) -> void:
+	show_hide_register_repeat_password.set_pressed_no_signal(toggle_state)
+	repeat_password.secret = not toggle_state
+	show_hide_register_repeat_password.texture_normal = show_icon if toggle_state else hide_icon
+	pass
 "
 
 [node name="Main" type="Node" unique_id=885951768]
 script = SubResource("GDScript_rccf1")
+show_icon = ExtResource("2_3s6yk")
+hide_icon = ExtResource("1_3eh75")
 
 [node name="LoginScreen" type="Control" parent="." unique_id=1468271237]
 unique_name_in_owner = true
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -148,8 +185,9 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Test"
 placeholder_text = "username"
+clear_button_enabled = true
+select_all_on_focus = true
 caret_blink = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/Login" unique_id=396630635]
@@ -160,14 +198,28 @@ custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 text = "Password "
 
-[node name="Password" type="LineEdit" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer2" unique_id=1840607063]
+[node name="HBoxContainer" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer2" unique_id=1966498146]
+layout_mode = 2
+
+[node name="Password" type="LineEdit" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer2/HBoxContainer" unique_id=1840607063]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Test123123123"
 placeholder_text = "password"
+virtual_keyboard_type = 6
 caret_blink = true
+secret = true
+
+[node name="ShowHideLoginPassword" type="TextureButton" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer2/HBoxContainer" unique_id=1961061819]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+toggle_mode = true
+texture_normal = ExtResource("1_3eh75")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="LoginButton" type="Button" parent="LoginScreen/Panel/MarginContainer/Login" unique_id=968731469]
 unique_name_in_owner = true
@@ -181,7 +233,6 @@ text = "Create Account"
 
 [node name="RegisterScreen" type="Control" parent="." unique_id=1149233577]
 unique_name_in_owner = true
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -237,6 +288,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Test"
 placeholder_text = "username"
+clear_button_enabled = true
 caret_blink = true
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=1328922959]
@@ -254,6 +306,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Test"
 placeholder_text = "username"
+clear_button_enabled = true
+virtual_keyboard_type = 5
 caret_blink = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=653207828]
@@ -264,14 +318,27 @@ custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 text = "Password "
 
-[node name="NewPassword" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer2" unique_id=1092522815]
+[node name="HBoxContainer" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer2" unique_id=122603458]
+layout_mode = 2
+
+[node name="NewPassword" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer2/HBoxContainer" unique_id=1092522815]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Test123"
 placeholder_text = "password"
+virtual_keyboard_type = 6
 caret_blink = true
+secret = true
+
+[node name="ShowHideRegisterPassword" type="TextureButton" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer2/HBoxContainer" unique_id=1402449014]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+toggle_mode = true
+texture_normal = ExtResource("1_3eh75")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=308315656]
 layout_mode = 2
@@ -281,14 +348,27 @@ custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 text = "Repeat Password "
 
-[node name="RepeatPassword" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer4" unique_id=718792391]
+[node name="HBoxContainer" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer4" unique_id=270467356]
+layout_mode = 2
+
+[node name="RepeatPassword" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer4/HBoxContainer" unique_id=718792391]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Test123"
-placeholder_text = "password"
+placeholder_text = "repeat password"
+virtual_keyboard_type = 6
 caret_blink = true
+secret = true
+
+[node name="ShowHideRegisterRepeatPassword" type="TextureButton" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer4/HBoxContainer" unique_id=1917940621]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+toggle_mode = true
+texture_normal = ExtResource("1_3eh75")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="ConfirmButton" type="Button" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=1234668330]
 unique_name_in_owner = true

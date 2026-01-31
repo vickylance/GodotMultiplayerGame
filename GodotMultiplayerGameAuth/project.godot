@@ -32,3 +32,9 @@ project/assembly_name="GodotMultiplayerGameAuth"
 [editor]
 
 run/main_run_args="--headless"
+
+[file_customization]
+
+folder_colors={
+"res://build/": "red"
+}

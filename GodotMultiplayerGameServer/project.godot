@@ -29,3 +29,9 @@ GameServers="*res://src/singleton/game_servers.gd"
 [dotnet]
 
 project/assembly_name="GodotMultiplayerGameServer"
+
+[file_customization]
+
+folder_colors={
+"res://build/": "red"
+}

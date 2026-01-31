@@ -31,3 +31,10 @@ project/assembly_name="GodotMultiplayerGameGateway"
 [editor]
 
 run/main_run_args="--headless"
+
+[file_customization]
+
+folder_colors={
+"res://build/": "red",
+"res://cert/": "orange"
+}

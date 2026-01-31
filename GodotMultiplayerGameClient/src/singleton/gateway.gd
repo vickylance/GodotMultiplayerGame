@@ -7,11 +7,12 @@ var gateway_server_port := 1910
 var cert = load("res://cert/X509_Certificate.crt")
 
 signal player_successfully_authenticated
-signal player_authentication_failed
+signal player_authentication_failed(message: String)
 signal player_created_successfully
-signal player_creation_failed
+signal player_creation_failed(message: String)
 
 var username: String
+var email: String
 var password: String
 var create_account: bool
 
@@ -23,10 +24,11 @@ func _process(_delta: float) -> void:
 	pass
 
 
-func connect_to_server(_username: String, _password: String, _create_account: bool = false) -> void:
+func connect_to_server(_username: String, _password: String, _create_account: bool = false, _email: String = "") -> void:
 	username = _username
 	password = _password
 	create_account = _create_account
+	email = _email
 	network = ENetMultiplayerPeer.new()
 	gateway_api = SceneMultiplayer.new()
 	var err := network.create_client(gateway_server_ip, gateway_server_port)
@@ -58,7 +60,7 @@ func _on_connected_to_server() -> void:
 
 func _on_connection_failed() -> void:
 	print("Failed to connect to gateway server")
-	player_authentication_failed.emit()
+	player_authentication_failed.emit("Failed to connect to server")
 
 
 func _on_server_disconnected() -> void:
@@ -83,7 +85,7 @@ func return_login_request(result: bool, _player_id: int, token: String) -> void:
 		player_successfully_authenticated.emit()
 	else:
 		print("Player authentication failed")
-		player_authentication_failed.emit()
+		player_authentication_failed.emit("Invalid username or password")
 	multiplayer.connected_to_server.disconnect(_on_connected_to_server)
 	multiplayer.connection_failed.disconnect(_on_connection_failed)
 	multiplayer.server_disconnected.disconnect(_on_server_disconnected)
@@ -93,9 +95,10 @@ func return_login_request(result: bool, _player_id: int, token: String) -> void:
 @rpc("reliable")
 func create_new_account_request() -> void:
 	print("Requesting new account creation")
-	create_new_account_request.rpc_id(1, username, password.sha256_text())
+	create_new_account_request.rpc_id(1, username, password.sha256_text(), email)
 	username = ""
 	password = ""
+	email = ""
 	pass
 
 
@@ -106,11 +109,12 @@ func return_create_new_account_request(result: bool, _player_id: int, message: i
 		print("Account created, please proceed with login")
 		player_created_successfully.emit()
 	else:
+		var error_msg = "Couldn't create account"
 		if message == 1:
-			print("Coundn't create account")
+			error_msg = "Validation failed on server"
 		elif message == 2:
-			print("Username already exists, please use different username")
-		player_creation_failed.emit()
+			error_msg = "Username already exists"
+		player_creation_failed.emit(error_msg)
 	multiplayer.connected_to_server.disconnect(_on_connected_to_server)
 	multiplayer.connection_failed.disconnect(_on_connection_failed)
 	multiplayer.server_disconnected.disconnect(_on_server_disconnected)

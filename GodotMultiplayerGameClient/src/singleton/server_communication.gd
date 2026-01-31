@@ -1,7 +1,7 @@
 extends Node
 
 signal player_connected
-signal player_login_verification_failed
+signal player_login_verification_failed(message: String)
 signal player_login_verification_success
 
 var network := ENetMultiplayerPeer.new()
@@ -90,7 +90,7 @@ func return_token_verification_results(_player_id: int, result: bool) -> void:
 		player_login_verification_success.emit()
 	else:
 		print("Player token verification failed")
-		player_login_verification_failed.emit()
+		player_login_verification_failed.emit("Token verification failed")
 	pass
 
 

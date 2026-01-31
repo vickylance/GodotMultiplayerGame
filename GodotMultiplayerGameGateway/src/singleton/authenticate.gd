@@ -58,15 +58,15 @@ func authenticate_player(username: String, password: String, player_id: int) -> 
 
 @rpc("reliable")
 func authenticate_result(result: bool, player_id: int, token: String) -> void:
-	print("Got result: ", result, " PlayerID: ", player_id, " TOKEN: ",  token)
+	print("Got result: ", result, " PlayerID: ", player_id, " TOKEN: ", token)
 	Gateway.return_login_request(result, player_id, token)
 	pass
 
 
 @rpc("reliable")
-func create_account(username: String, password: String, player_id: int) -> void:
+func create_account(username: String, password: String, player_id: int, email: String) -> void:
 	print("Sending create account to AuthServer")
-	create_account.rpc_id(1, username, password, player_id)
+	create_account.rpc_id(1, username, password, player_id, email)
 	pass
 
 

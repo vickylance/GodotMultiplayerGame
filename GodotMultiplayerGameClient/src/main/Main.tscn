@@ -1,137 +1,16 @@
 [gd_scene format=3 uid="uid://yxfoiqtkydn7"]
 
+[ext_resource type="Script" uid="uid://butqn0wiya86k" path="res://src/main/main.gd" id="1_0nwsm"]
 [ext_resource type="Texture2D" uid="uid://c3xuhi3ovpnpx" path="res://assets/ui/hidden.png" id="1_3eh75"]
 [ext_resource type="Texture2D" uid="uid://6p4hk5rqin5f" path="res://assets/ui/eye.png" id="2_3s6yk"]
 
-[sub_resource type="GDScript" id="GDScript_rccf1"]
-script/source = "extends Node
-
-@export var show_icon: Texture2D
-@export var hide_icon: Texture2D
-
-# screens
-@onready var register_screen: Control = %RegisterScreen
-@onready var login_screen: Control = %LoginScreen
-# login screen
-@onready var username: LineEdit = %Username
-@onready var password: LineEdit = %Password
-@onready var login_button: Button = %LoginButton
-@onready var create_account_button: Button = %CreateAccountButton
-@onready var show_hide_login_password: TextureButton = %ShowHideLoginPassword
-# register screen
-@onready var new_username: LineEdit = %NewUsername
-@onready var email_address: LineEdit = %EmailAddress
-@onready var new_password: LineEdit = %NewPassword
-@onready var repeat_password: LineEdit = %RepeatPassword
-@onready var back_button: Button = %BackButton
-@onready var confirm_button: Button = %ConfirmButton
-@onready var show_hide_register_password: TextureButton = %ShowHideRegisterPassword
-@onready var show_hide_register_repeat_password: TextureButton = %ShowHideRegisterRepeatPassword
-
-
-func _ready():
-	Gateway.player_authentication_failed.connect(_on_login_failed)
-	ServerCommunication.player_login_verification_failed.connect(_on_login_failed)
-	ServerCommunication.player_login_verification_success.connect(_on_login_success)
-	Gateway.player_created_successfully.connect(_on_back_button_pressed)
-	Gateway.player_creation_failed.connect(_on_create_account_failed)
-	show_hide_login_password.toggled.connect(_on_show_hide_login_password_toggle)
-	show_hide_register_password.toggled.connect(_on_show_hide_register_password_toggle)
-	show_hide_register_repeat_password.toggled.connect(_on_show_hide_register_repeat_password_toggle)
-	back_button.button_up.connect(_on_show_hide_register_password_toggle.bind(false))
-	back_button.button_up.connect(_on_show_hide_register_repeat_password_toggle.bind(false))
-	create_account_button.button_up.connect(_on_show_hide_login_password_toggle.bind(false))
-	login_screen.show()
-	register_screen.hide()
-	pass
-
-
-func _on_login_failed() -> void:
-	login_button.disabled = false
-	create_account_button.disabled = false
-	pass
-
-
-func _on_create_account_failed() -> void:
-	confirm_button.disabled = false
-	back_button.disabled = false
-	pass
-
-
-func _on_login_success() -> void:
-	get_tree().change_scene_to_file(\"res://src/main/game_scene.tscn\")
-	pass
-
-
-func _on_login_button_pressed() -> void:
-	# TODO: Validate username and password field
-	if username.text == \"\" or password.text == \"\":
-		print(\"Please provide valid input for username and password\")
-	else:
-		print(\"Attempting to login via GatewayServer\")
-		Gateway.connect_to_server(username.text, password.text, false)
-		login_button.disabled = true
-		create_account_button.disabled = true
-	pass
-
-
-func _on_create_account_button_pressed() -> void:
-	login_screen.hide()
-	register_screen.show()
-	pass
-
-
-func _on_back_button_pressed() -> void:
-	login_screen.show()
-	register_screen.hide()
-	pass
-
-
-func _on_confirm_button_pressed() -> void:
-	if new_username.text == \"\":
-		print(\"Enter your new username\")
-	elif email_address.text == \"\":
-		print(\"Enter a valid email address\")
-	elif new_password.text == \"\" or repeat_password.text == \"\":
-		print(\"Enter a valid new password and repeat password\")
-	elif new_password.text != repeat_password.text:
-		print(\"New password and repeat password are not matching\")
-	elif new_password.text.length() < 10:
-		print(\"Enter atleast 9 characters for password\")
-	else:
-		confirm_button.disabled = true
-		back_button.disabled = true
-		Gateway.connect_to_server(new_username.text, new_password.text, true)
-	pass
-
-
-func _on_show_hide_login_password_toggle(toggle_state: bool) -> void:
-	show_hide_login_password.set_pressed_no_signal(toggle_state)
-	password.secret = not toggle_state
-	show_hide_login_password.texture_normal = show_icon if toggle_state else hide_icon
-	pass
-
-func _on_show_hide_register_password_toggle(toggle_state: bool) -> void:
-	show_hide_register_password.set_pressed_no_signal(toggle_state)
-	new_password.secret = not toggle_state
-	show_hide_register_password.texture_normal = show_icon if toggle_state else hide_icon
-	pass
-
-func _on_show_hide_register_repeat_password_toggle(toggle_state: bool) -> void:
-	show_hide_register_repeat_password.set_pressed_no_signal(toggle_state)
-	repeat_password.secret = not toggle_state
-	show_hide_register_repeat_password.texture_normal = show_icon if toggle_state else hide_icon
-	pass
-"
-
 [node name="Main" type="Node" unique_id=885951768]
-script = SubResource("GDScript_rccf1")
+script = ExtResource("1_0nwsm")
 show_icon = ExtResource("2_3s6yk")
 hide_icon = ExtResource("1_3eh75")
 
 [node name="LoginScreen" type="Control" parent="." unique_id=1468271237]
 unique_name_in_owner = true
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -168,9 +47,15 @@ theme_override_constants/margin_bottom = 10
 [node name="Login" type="VBoxContainer" parent="LoginScreen/Panel/MarginContainer" unique_id=1194225658]
 layout_mode = 2
 
-[node name="Login" type="Label" parent="LoginScreen/Panel/MarginContainer/Login" unique_id=1947122494]
+[node name="MarginContainer" type="MarginContainer" parent="LoginScreen/Panel/MarginContainer/Login" unique_id=1596841079]
 layout_mode = 2
+theme_override_constants/margin_bottom = 10
+
+[node name="Login" type="Label" parent="LoginScreen/Panel/MarginContainer/Login/MarginContainer" unique_id=1947122494]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "LOGIN"
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/Login" unique_id=1764818373]
 layout_mode = 2
@@ -178,17 +63,34 @@ layout_mode = 2
 [node name="Label" type="Label" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer" unique_id=883475342]
 custom_minimum_size = Vector2(150, 2.08165e-12)
 layout_mode = 2
-text = "Username"
+text = "Username / Email"
 
 [node name="Username" type="LineEdit" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer" unique_id=442899044]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 2.08165e-12)
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "username"
+placeholder_text = "username / email"
 clear_button_enabled = true
 select_all_on_focus = true
 caret_blink = true
+
+[node name="LoginUsernameError" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/Login" unique_id=559253321]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LoginScreen/Panel/MarginContainer/Login/LoginUsernameError" unique_id=2105165122]
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+
+[node name="LoginUsernameErrorLabel" type="Label" parent="LoginScreen/Panel/MarginContainer/Login/LoginUsernameError" unique_id=1014311302]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/Login" unique_id=396630635]
 layout_mode = 2
@@ -200,6 +102,7 @@ text = "Password "
 
 [node name="HBoxContainer" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer2" unique_id=1966498146]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Password" type="LineEdit" parent="LoginScreen/Panel/MarginContainer/Login/HBoxContainer2/HBoxContainer" unique_id=1840607063]
 unique_name_in_owner = true
@@ -221,6 +124,23 @@ texture_normal = ExtResource("1_3eh75")
 ignore_texture_size = true
 stretch_mode = 0
 
+[node name="LoginPasswordError" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/Login" unique_id=1881413613]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LoginScreen/Panel/MarginContainer/Login/LoginPasswordError" unique_id=87529775]
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+
+[node name="LoginPasswordErrorLabel" type="Label" parent="LoginScreen/Panel/MarginContainer/Login/LoginPasswordError" unique_id=711260650]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
+
 [node name="LoginButton" type="Button" parent="LoginScreen/Panel/MarginContainer/Login" unique_id=968731469]
 unique_name_in_owner = true
 layout_mode = 2
@@ -231,8 +151,22 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Create Account"
 
+[node name="LoginOverallError" type="HBoxContainer" parent="LoginScreen/Panel/MarginContainer/Login" unique_id=271792952]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="LoginOverallErrorLabel" type="Label" parent="LoginScreen/Panel/MarginContainer/Login/LoginOverallError" unique_id=830724041]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
+
 [node name="RegisterScreen" type="Control" parent="." unique_id=1149233577]
 unique_name_in_owner = true
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -269,9 +203,15 @@ theme_override_constants/margin_bottom = 10
 [node name="Register" type="VBoxContainer" parent="RegisterScreen/Panel/MarginContainer" unique_id=1236764133]
 layout_mode = 2
 
-[node name="Register" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=246051878]
+[node name="MarginContainer" type="MarginContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=978635174]
 layout_mode = 2
+theme_override_constants/margin_bottom = 10
+
+[node name="Register" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/MarginContainer" unique_id=246051878]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "REGISTER"
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=1119986758]
 layout_mode = 2
@@ -283,13 +223,29 @@ text = "Username"
 
 [node name="NewUsername" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer" unique_id=3580257]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 2.08165e-12)
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Test"
 placeholder_text = "username"
 clear_button_enabled = true
 caret_blink = true
+
+[node name="RegisterUsernameError" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=1768349109]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/RegisterUsernameError" unique_id=1934254263]
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+
+[node name="RegisterUsernameErrorLabel" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/RegisterUsernameError" unique_id=1753763230]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=1328922959]
 layout_mode = 2
@@ -301,7 +257,7 @@ text = "Email Address"
 
 [node name="EmailAddress" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer3" unique_id=148006716]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 2.08165e-12)
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Test"
@@ -309,6 +265,23 @@ placeholder_text = "username"
 clear_button_enabled = true
 virtual_keyboard_type = 5
 caret_blink = true
+
+[node name="RegisterEmailError" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=1348273761]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/RegisterEmailError" unique_id=79915123]
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+
+[node name="RegisterEmailErrorLabel" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/RegisterEmailError" unique_id=1264273684]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=653207828]
 layout_mode = 2
@@ -320,6 +293,7 @@ text = "Password "
 
 [node name="HBoxContainer" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer2" unique_id=122603458]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="NewPassword" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer2/HBoxContainer" unique_id=1092522815]
 unique_name_in_owner = true
@@ -340,6 +314,24 @@ texture_normal = ExtResource("1_3eh75")
 ignore_texture_size = true
 stretch_mode = 0
 
+[node name="RegisterPasswordError" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=854822582]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/RegisterPasswordError" unique_id=537100812]
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+
+[node name="RegisterPasswordErrorLabel" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/RegisterPasswordError" unique_id=152039751]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
+text = "sdfgsdf"
+
 [node name="HBoxContainer4" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=308315656]
 layout_mode = 2
 
@@ -350,6 +342,7 @@ text = "Repeat Password "
 
 [node name="HBoxContainer" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer4" unique_id=270467356]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="RepeatPassword" type="LineEdit" parent="RegisterScreen/Panel/MarginContainer/Register/HBoxContainer4/HBoxContainer" unique_id=718792391]
 unique_name_in_owner = true
@@ -370,6 +363,24 @@ texture_normal = ExtResource("1_3eh75")
 ignore_texture_size = true
 stretch_mode = 0
 
+[node name="RegisterRepeatPasswordError" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=902052503]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/RegisterRepeatPasswordError" unique_id=1202425488]
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+
+[node name="RegisterRepeatPasswordErrorLabel" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/RegisterRepeatPasswordError" unique_id=731544076]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
+text = "sdfgsdf"
+
 [node name="ConfirmButton" type="Button" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=1234668330]
 unique_name_in_owner = true
 layout_mode = 2
@@ -379,6 +390,19 @@ text = "Confirm"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Back"
+
+[node name="RegisterOverallError" type="HBoxContainer" parent="RegisterScreen/Panel/MarginContainer/Register" unique_id=725884836]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="RegisterOverallErrorLabel" type="Label" parent="RegisterScreen/Panel/MarginContainer/Register/RegisterOverallError" unique_id=1242769261]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 2.08165e-12)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 12
 
 [connection signal="pressed" from="LoginScreen/Panel/MarginContainer/Login/LoginButton" to="." method="_on_login_button_pressed"]
 [connection signal="pressed" from="LoginScreen/Panel/MarginContainer/Login/CreateAccountButton" to="." method="_on_create_account_button_pressed"]

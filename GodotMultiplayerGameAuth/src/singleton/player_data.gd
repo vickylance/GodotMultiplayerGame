@@ -18,7 +18,7 @@ func load_player_ids() -> void:
 		save_player_ids()
 	
 	var player_data_file := FileAccess.open(DATA_FOLDER + PLAYER_DATA, FileAccess.READ)
-	if player_data_file == null:
+	if FileAccess.get_open_error() != OK:
 		var error_str = error_string(FileAccess.get_open_error())
 		push_error("Couldn't open file because: %s" % error_str)
 	player_data = JSON.parse_string(player_data_file.get_as_text())

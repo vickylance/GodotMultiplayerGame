@@ -55,6 +55,9 @@ func main() {
 
 	router.POST("/register", registerUser)
 	router.POST("/login", loginUser)
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "healthy"})
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {

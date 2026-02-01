@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: game-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: game_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  backend:
+    build:
+      context: ./GodotMultiplayerGameBackend
+      dockerfile: Dockerfile
+    container_name: game-backend
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://user:password@db:5432/game_db
+      PORT: 8080
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:

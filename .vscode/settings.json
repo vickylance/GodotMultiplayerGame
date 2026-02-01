@@ -1,3 +1,4 @@
 {
-  "circleci.persistedProjectSelection": []
+  "circleci.persistedProjectSelection": [],
+  "godotTools.editorPath.godot4": "/Applications/Godot_v4.6_mono.app"
 }

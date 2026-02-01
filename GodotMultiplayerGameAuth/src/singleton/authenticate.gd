@@ -43,16 +43,19 @@ func authenticate_player(username: String, password: String, player_id: int) -> 
 	var token := ""
 	var hashed_password
 	var gateway_id = multiplayer.get_remote_sender_id()
-	var result
-	print("Starting authentication", PlayerData.player_data, username)
-	if not PlayerData.player_data.has(username):
+	var result := false
+	
+	print("Starting authentication check for ", username)
+	var user_data = await PlayerData.api_get_user(username)
+	
+	if user_data.is_empty():
 		print("User not recognized")
 		result = false
 	else:
-		var retrieved_salt = PlayerData.player_data[username].Salt
+		var retrieved_salt = user_data.Salt
 		hashed_password = generate_hashed_password(password, retrieved_salt)
 	
-		if not PlayerData.player_data[username].Password == hashed_password:
+		if not user_data.Password == hashed_password:
 			print("Incorrect password")
 			result = false
 		else:
@@ -85,50 +88,26 @@ func create_account(username: String, password: String, player_id: int, email: S
 	"""
 	print("Create account started")
 	var gateway_id := multiplayer.get_remote_sender_id()
-	var result := false
-	var message := 1 # Default error
 	
 	# Server-side validation
 	var username_regex = RegEx.new()
 	username_regex.compile("^[a-zA-Z0-9_]{3,16}$")
-	var password_regex = RegEx.new()
-	# Password is expected to be SHA256 hashed from client, so we just check length or basic format if needed
-	# However, for full security we should check requirements on plaintext, but client sends hash.
-	# If client sends hash, we can't check " uppercase/lowercase" easily unless we trust client
-	# OR client sends plaintext over DTLS (which it does via Gateway).
-	# Wait, Gateway.gd (Client) does: create_new_account_request.rpc_id(1, username, password.sha256_text(), email)
-	# So Auth receives a HASHED password. We can't validate "uppercase" on a hash.
-	# We should trust client validation OR change flow to send plaintext over secure tunnel.
-	# For now, I will proceed with length check on hash and valid username/email.
 	
 	var email_regex = RegEx.new()
 	email_regex.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
 	
-	if not username_regex.search(username):
-		result = false
-		message = 1 # Validation failed
-	elif not email_regex.search(email):
-		result = false
-		message = 1 # Validation failed
-	elif PlayerData.player_data.has(username):
-		result = false
-		message = 2 # Existing user
-	else:
-		result = true
-		message = 3 # Welcome
-		var salt := generate_salt()
-		var hashed_password := generate_hashed_password(password, salt)
-		PlayerData.player_data[username] = {
-			"Password": hashed_password,
-			"Salt": salt,
-			"Email": email
-		}
-		PlayerData.save_player_ids()
+	if not username_regex.search(username) or not email_regex.search(email):
+		create_account_result.rpc_id(gateway_id, false, player_id, 1) # Validation failed
+		return
+
+	# Proceed with registration
+	var salt := generate_salt()
+	var hashed_password := generate_hashed_password(password, salt)
 	
-	create_account_result.rpc_id(gateway_id, result, player_id, message)
-	print("Reload IDs")
-	PlayerData.load_player_ids()
-	print("PlayerData: ", PlayerData.player_data)
+	var api_result = await PlayerData.api_register(username, email, hashed_password, salt)
+	
+	create_account_result.rpc_id(gateway_id, api_result.result, player_id, api_result.message)
+	print("Account creation result: ", api_result)
 	pass
 
 

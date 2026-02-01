@@ -10,7 +10,7 @@ This project implements a scalable multiplayer system that separates concerns be
 
 - **[Auth Server](GodotMultiplayerGameAuth)**: The source of truth for player data and credentials. Uses Godot 4.6 Mono
   - **[Player Data](GodotMultiplayerGameAuth/src/singleton/player_data.gd)**: Manages player data and credentials.
-  - **[Server Communication](GodotMultiplayerGameAuth/src/singleton/server_communication.gd)**: Handles communication between servers.
+  - **[Game Servers](GodotMultiplayerGameAuth/src/singleton/game_servers.gd)**: Manages game servers.
   - **[Player Verification](GodotMultiplayerGameAuth/src/singleton/player_verification.gd)**: Handles player verification.
 - **[Gateway Server](GodotMultiplayerGameGateway)**: A DTLS-secured entry point for clients to authenticate and register. Uses Godot 4.6 Mono
   - **[Gateway](GodotMultiplayerGameGateway/src/main/gateway.gd)**: Handles client authentication and registration.
@@ -29,6 +29,17 @@ This project implements a scalable multiplayer system that separates concerns be
 ---
 
 ## 🏗 Architecture
+
+### Architecture Overview
+
+The system follows a distributed authoritative server model:
+
+1. **Client**: Godot UI for login, registration, and gameplay.
+2. **Gateway Server**: Public-facing entry point (DTLS secure) that proxies authentication.
+3. **Auth Server**: Internal server managing sessions, tokens, and verification.
+4. **Backend API (Go)**: Internal REST API managing database persistence.
+5. **PostgreSQL**: Secure storage for user credentials and profiles.
+6. **Game Server**: Authoritative instance managing real-time physics and combat.
 
 The system uses a token-based handoff mechanism to move clients from authentication to gameplay.
 
@@ -69,24 +80,32 @@ sequenceDiagram
 
 ---
 
-## 🛠 Setup & Running
+### Setup & Running
 
-### 1. Security First
+#### 1. Start the Backend Infrastructure
 
-Before running the servers, you must generate the necessary SSL/TLS certificates for the Gateway.
+The project uses a Go API and PostgreSQL for data persistence. This must be running before the Godot servers.
 
-1. Run the **CertificateGenerator** project.
-2. It will generate `X509_Certificate.crt` and `X509_key.key` in your user data directory.
-3. Copy these to the `res://cert/` folder of both the **Gateway** and **Client** projects.
+```bash
+make build
+```
 
-### 2. Startup Order
+#### 2. Generate Certificates
 
-To ensure proper handshakes between internal components, start them in this order:
+For secure DTLS communication between the Client and Gateway:
 
-1. **Auth Server**
-2. **Game Server** (Connects to Auth)
-3. **Gateway Server** (Connects to Auth)
-4. **Client**
+```bash
+make certs
+```
+
+#### 3. Start Order
+
+Run the Godot instances in this order (using `--headless` for servers):
+
+1. **Auth Server** (`Auth/project.godot`)
+2. **Gateway Server** (`Gateway/project.godot`)
+3. **Game Server** (`Server/project.godot`)
+4. **Client** (`Client/project.godot`)
 
 ---
 

@@ -1,33 +1,74 @@
 extends Node
 
-var player_data: Dictionary = {}
-const DATA_FOLDER = "user://data/"
-const PLAYER_DATA = "player_data.json"
-
-func _ready() -> void:
-	print(OS.get_user_data_dir())
-	if not DirAccess.dir_exists_absolute(DATA_FOLDER):
-		DirAccess.make_dir_recursive_absolute(DATA_FOLDER)
-	load_player_ids()
-	pass
+const BACKEND_URL = "http://localhost:8080"
 
 
-func load_player_ids() -> void:
-	# Check if file exists if not create
-	if not FileAccess.file_exists(DATA_FOLDER + PLAYER_DATA):
-		save_player_ids()
+func api_register(username: String, email: String, password_hash: String, salt: String) -> Dictionary:
+	"""Calls the Go Backend to register a new user
+	"""
+	var http_request = HTTPRequest.new()
+	add_child(http_request)
 	
-	var player_data_file := FileAccess.open(DATA_FOLDER + PLAYER_DATA, FileAccess.READ)
-	if FileAccess.get_open_error() != OK:
-		var error_str = error_string(FileAccess.get_open_error())
-		push_error("Couldn't open file because: %s" % error_str)
-	player_data = JSON.parse_string(player_data_file.get_as_text())
-	player_data_file.close()
-	pass
+	var body = JSON.stringify({
+		"username": username,
+		"email": email,
+		"password_hash": password_hash,
+		"salt": salt
+	})
+	
+	var headers = ["Content-Type: application/json"]
+	var err = http_request.request(BACKEND_URL + "/register", headers, HTTPClient.METHOD_POST, body)
+	
+	if err != OK:
+		push_error("An error occurred in the HTTP request.")
+		http_request.queue_free()
+		return {"result": false, "message": 1}
+		
+	var response = await http_request.request_completed
+	http_request.queue_free()
+	
+	var response_code = response[1]
+	var response_body = JSON.parse_string(response[3].get_string_from_utf8())
+	
+	if response_code == 201:
+		return {"result": true, "message": 3}
+	else:
+		if response_body and response_body.has("error") and "unique constraint" in response_body["error"]:
+			return {"result": false, "message": 2} # Existing user
+		return {"result": false, "message": 1} # General failure
 
 
-func save_player_ids() -> void:
-	var player_data_file := FileAccess.open(DATA_FOLDER + PLAYER_DATA, FileAccess.WRITE)
-	player_data_file.store_line(JSON.stringify(player_data))
-	player_data_file.close()
-	pass
+func api_get_user(username: String) -> Dictionary:
+	"""Calls the Go Backend to fetch user data for authentication
+	"""
+	var http_request = HTTPRequest.new()
+	add_child(http_request)
+	
+	var body = JSON.stringify({
+		"username": username
+	})
+	
+	var headers = ["Content-Type: application/json"]
+	var err = http_request.request(BACKEND_URL + "/login", headers, HTTPClient.METHOD_POST, body)
+	
+	if err != OK:
+		push_error("An error occurred in the HTTP request.")
+		http_request.queue_free()
+		return {}
+		
+	var response = await http_request.request_completed
+	http_request.queue_free()
+	
+	var response_code = response[1]
+	var response_body = JSON.parse_string(response[3].get_string_from_utf8())
+	
+	if response_code == 200:
+		# Return in format expected by Authenticate.gd
+		# Password in DB is what was previously hashed_password (Password + salt hashed multiple times)
+		# Salt is the original salt.
+		return {
+			"Password": response_body["password_hash"],
+			"Salt": response_body["salt"]
+		}
+	else:
+		return {}

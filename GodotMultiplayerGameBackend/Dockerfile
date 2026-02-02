@@ -9,6 +9,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
+RUN go build -o main ./cmd/api/main.go
 
 # Default command uses Air
 CMD ["air", "-c", ".air.toml"]

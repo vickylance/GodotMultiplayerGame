@@ -2,7 +2,7 @@ extends Node
 
 var network := ENetMultiplayerPeer.new()
 var gateway_api := SceneMultiplayer.new()
-var gateway_server_port := 1910
+var gateway_server_port := int(OS.get_environment("GATEWAY_PORT")) if OS.has_environment("GATEWAY_PORT") else 1910
 var max_players := 100
 var cert_key := load("res://cert/X509_key.key")
 var cert := load("res://cert/X509_Certificate.crt")

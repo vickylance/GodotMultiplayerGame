@@ -40,5 +40,53 @@ services:
       timeout: 5s
       retries: 3
 
+  auth:
+    restart: always
+    platform: linux/amd64
+    build:
+      context: ./GodotMultiplayerGameAuth
+      dockerfile: ../Dockerfile.godot
+    container_name: game-auth
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      BACKEND_URL: http://game-backend:${BACKEND_PORT}
+      AUTH_SERVER_PORT: ${AUTH_SERVER_PORT}
+      AUTH_GAME_PORT: ${AUTH_GAME_PORT}
+    ports:
+      - "${AUTH_SERVER_PORT}:${AUTH_SERVER_PORT}"
+      - "${AUTH_GAME_PORT}:${AUTH_GAME_PORT}"
+
+  gateway:
+    restart: always
+    build:
+      context: ./GodotMultiplayerGameGateway
+      dockerfile: ../Dockerfile.godot
+    container_name: game-gateway
+    depends_on:
+      - auth
+    environment:
+      AUTH_IP: ${AUTH_IP}
+      AUTH_PORT: ${AUTH_PORT}
+      GATEWAY_PORT: ${GATEWAY_PORT}
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}/udp"
+
+  server:
+    restart: always
+    build:
+      context: ./GodotMultiplayerGameServer
+      dockerfile: ../Dockerfile.godot
+    container_name: game-server
+    depends_on:
+      - auth
+    environment:
+      AUTH_IP: ${AUTH_IP}
+      AUTH_GAME_PORT: ${AUTH_GAME_PORT}
+      GAME_SERVER_PORT: ${GAME_SERVER_PORT}
+    ports:
+      - "${GAME_SERVER_PORT}:${GAME_SERVER_PORT}/udp"
+
 volumes:
   postgres_data:

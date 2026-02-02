@@ -6,7 +6,7 @@ AUTH_DIR = GodotMultiplayerGameAuth
 SERVER_DIR = GodotMultiplayerGameServer
 
 # --- Docker Commands ---
-.PHONY: up down build logs db-shell
+.PHONY: up down build logs db-shell clean
 
 up:
 	docker-compose up -d
@@ -15,7 +15,11 @@ down:
 	docker-compose down
 
 build:
-	docker-compose up --build -d
+	docker-compose build --pull
+
+clean:
+	@echo "Cleaning up Docker resources..."
+	docker-compose down --rmi local --volumes --remove-orphans
 
 logs:
 	docker-compose logs -f

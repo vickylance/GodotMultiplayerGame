@@ -1,7 +1,7 @@
 extends Node
 
 var network := ENetMultiplayerPeer.new()
-var auth_server_port := 1911
+var auth_server_port := int(OS.get_environment("AUTH_SERVER_PORT")) if OS.has_environment("AUTH_SERVER_PORT") else 1911
 var max_gateways := 5
 
 

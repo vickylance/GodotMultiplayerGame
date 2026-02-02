@@ -2,7 +2,7 @@ extends Node
 class_name GameServer
 
 var network := ENetMultiplayerPeer.new()
-var game_server_port := 1909
+var game_server_port := int(OS.get_environment("GAME_SERVER_PORT")) if OS.has_environment("GAME_SERVER_PORT") else 1909
 var max_players := 150
 var expected_tokens: Array[String] = []
 
@@ -23,7 +23,7 @@ func start_server() -> void:
 	assert(err2 == OK)
 	
 	print("GameServer -> Client: Started on port: " + str(game_server_port))
-	print("GameServer -> Client: Multiplayer ID: ", multiplayer.get_unique_id())	
+	print("GameServer -> Client: Multiplayer ID: ", multiplayer.get_unique_id())
 	pass
 
 

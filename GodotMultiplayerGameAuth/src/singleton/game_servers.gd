@@ -2,7 +2,7 @@ extends Node
 
 var network := ENetMultiplayerPeer.new()
 var auth_api := SceneMultiplayer.new()
-var auth_server_port := 1912
+var auth_server_port := int(OS.get_environment("AUTH_GAME_PORT")) if OS.has_environment("AUTH_GAME_PORT") else 1912
 var max_game_servers := 100
 
 var game_server_list = {}

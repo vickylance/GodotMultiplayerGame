@@ -1,6 +1,6 @@
 extends Node
 
-const BACKEND_URL = "http://localhost:8080"
+@onready var BACKEND_URL := OS.get_environment("BACKEND_URL") if OS.has_environment("BACKEND_URL") else "http://localhost:8080"
 
 
 func api_register(username: String, email: String, password_hash: String, salt: String) -> Dictionary:

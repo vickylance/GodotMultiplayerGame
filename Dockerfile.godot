@@ -1,0 +1,35 @@
+FROM ubuntu:22.04
+
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Essential dependencies for Godot 4 headless
+RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
+    ca-certificates \
+    libfontconfig1 \
+    libxinerama1 \
+    libxrender1 \
+    libxext6 \
+    libx11-6 \
+    libxcursor1 \
+    libxi6 \
+    libgl1-mesa-glx \
+    libdbus-1-3 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Download Godot 4.6 (Stable)
+RUN wget https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_linux.x86_64.zip \
+    && unzip Godot_v4.6-stable_linux.x86_64.zip \
+    && mv Godot_v4.6-stable_linux.x86_64 /usr/local/bin/godot \
+    && chmod +x /usr/local/bin/godot \
+    && rm Godot_v4.6-stable_linux.x86_64.zip
+
+WORKDIR /app
+
+# The project files will be mounted or copied here
+COPY . .
+
+# Run headless by default
+CMD ["godot", "--headless", "--main-pack", "project.godot"]

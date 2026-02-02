@@ -2,8 +2,8 @@ extends Node
 
 var network := ENetMultiplayerPeer.new()
 var authenticate_api := SceneMultiplayer.new()
-var authenticate_server_ip := "127.0.0.1"
-var authenticate_server_port := 1912
+var authenticate_server_ip := OS.get_environment("AUTH_IP") if OS.has_environment("AUTH_IP") else "127.0.0.1"
+var authenticate_server_port := int(OS.get_environment("AUTH_GAME_PORT")) if OS.has_environment("AUTH_GAME_PORT") else 1912
 
 var game_server
 

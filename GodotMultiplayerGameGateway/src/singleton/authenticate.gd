@@ -1,8 +1,8 @@
 extends Node
 
 var network := ENetMultiplayerPeer.new()
-var auth_server_ip := "127.0.0.1"
-var auth_server_port := 1911
+var auth_server_ip := OS.get_environment("AUTH_IP") if OS.has_environment("AUTH_IP") else "127.0.0.1"
+var auth_server_port := int(OS.get_environment("AUTH_PORT")) if OS.has_environment("AUTH_PORT") else 1911
 
 
 func _ready() -> void:
